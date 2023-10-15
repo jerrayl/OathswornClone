@@ -1,25 +1,54 @@
-﻿namespace RAZE
+﻿namespace Oathsworn
 {
+    public enum Might
+    {
+        White = 1,
+        Yellow = 2,
+        Red = 3,
+        Black = 4
+    }
+
+    public enum BossPosition
+    {
+        Front,
+        Back,
+        Core,
+        LeftFlank1,
+        LeftFlank2,
+        RightFlank1,
+        RightFlank2
+    }
+
+    public enum Token
+    {
+        Battleflow,
+        Redraw,
+        Defence,
+        Empower,
+        Animus
+    }
+
+    public enum Class
+    {
+        Warbear,
+        Exile,
+        Cur,
+        Priest,
+        Harbinger,
+        Blade,
+        Witch,
+        Ranger,
+        Warden,
+        Huntress,
+        Penitent,
+        GroveMaiden
+    }
+
     public class Constants
     {
-        // Elements
-        public const string FIRE = "FIRE";
-        public const string WATER = "WATER";
-        public const string EARTH = "EARTH";
-        public const string AIR = "AIR";
-        public const string FOOD = "FOOD";
-        public const string ARCANA = "ARCANA";
-
-        // Bonus Types
-        public const string ATTACK = "ATTACK";
-        public const string TROOP_HEALTH =  "TROOPHEALTH";
-        public const string BUILDING_HEALTH =  "BUILDINGHEALTH";
-        // FOOD is shared with elements
-
-        // Status Types
-        public const string BUILD = "Build Phase";
-        public const string COMBAT = "Combat Phase"; 
-        public const string GAME_OVER = "Game Over";
+        // Game constants
+        public const int EMPOWER_TOKEN_VALUE = 3;
+        public const int ANIMUS_TOKEN_VALUE = 2;
 
         // SignalR Responses
         public const string SUCCESS = "SUCCESS";
