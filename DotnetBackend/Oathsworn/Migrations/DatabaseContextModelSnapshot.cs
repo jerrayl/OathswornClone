@@ -223,6 +223,9 @@ namespace Oathsworn.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("AttackId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("DeckId")
                         .HasColumnType("INTEGER");
 
@@ -230,6 +233,9 @@ namespace Oathsworn.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsCritical")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("PlayerId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Type")
@@ -241,6 +247,8 @@ namespace Oathsworn.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EncounterMightDeckId");
+
+                    b.HasIndex("PlayerId");
 
                     b.ToTable("MightCards");
                 });
@@ -424,6 +432,10 @@ namespace Oathsworn.Migrations
                         .WithMany("MightCards")
                         .HasForeignKey("EncounterMightDeckId");
 
+                    b.HasOne("Oathsworn.Entities.Player", null)
+                        .WithMany("MightCards")
+                        .HasForeignKey("PlayerId");
+
                     b.Navigation("EncounterMightDeck");
                 });
 
@@ -507,6 +519,8 @@ namespace Oathsworn.Migrations
             modelBuilder.Entity("Oathsworn.Entities.Player", b =>
                 {
                     b.Navigation("EncounterPlayer");
+
+                    b.Navigation("MightCards");
 
                     b.Navigation("PlayerAbilities");
 

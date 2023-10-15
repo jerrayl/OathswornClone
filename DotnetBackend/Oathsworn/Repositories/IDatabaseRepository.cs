@@ -8,6 +8,7 @@ namespace Oathsworn.Repositories
     public interface IDatabaseRepository<T> where T : BaseEntity
     {
         void Add(T entity);
+        void AddBatch(List<T> entity);
         void Update(T entity);
 
         IEnumerable<T> Read();

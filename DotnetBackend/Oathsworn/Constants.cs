@@ -1,5 +1,8 @@
-﻿namespace Oathsworn
+﻿using System.Text.Json.Serialization;
+
+namespace Oathsworn
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Might
     {
         White = 1,
@@ -8,11 +11,13 @@
         Black = 4
     }
 
-    public enum BossPosition
+    public enum BossPart
     {
         Front,
         Back,
         Core,
+        LeftFlank,
+        RightFlank,
         LeftFlank1,
         LeftFlank2,
         RightFlank1,
@@ -27,7 +32,8 @@
         Empower,
         Animus
     }
-
+    
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Class
     {
         Warbear,

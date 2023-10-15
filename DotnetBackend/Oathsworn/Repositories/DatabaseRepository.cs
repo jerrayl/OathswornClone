@@ -26,6 +26,14 @@ namespace Oathsworn.Repositories
             _dbContext.SaveChanges();
         }
 
+        public void AddBatch(List<T> entities)
+        {
+            if (entities.Any(e => e is null))
+                throw new ArgumentNullException(nameof(entities));
+            _entities.AddRange(entities);
+            _dbContext.SaveChanges();
+        }
+
         public void Update(T entity)
         {
             if (entity == null)

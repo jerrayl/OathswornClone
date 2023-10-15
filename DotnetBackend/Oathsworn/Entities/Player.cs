@@ -16,5 +16,6 @@ namespace Oathsworn.Entities
         public virtual EncounterPlayer EncounterPlayer { get; set; }
         public virtual List<PlayerItem> PlayerItems { get; set; }
         public virtual List<PlayerAbility> PlayerAbilities { get; set; }
+        public virtual List<MightCard> MightCards { get; set; }
     }
 }
