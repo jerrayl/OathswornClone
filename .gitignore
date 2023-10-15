@@ -1,4 +1,7 @@
 DotnetBackend/Oathsworn/obj
 DotnetBackend/Oathsworn/bin
+DotnetBackend/OathswornTests/obj
+DotnetBackend/OathswornTests/bin
 DotnetBackend/.vs
 DotnetBackend/Oathsworn/Oathsworn.db
+.vscode

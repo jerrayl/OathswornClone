@@ -5,21 +5,16 @@ using Xunit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore.InMemory;
-using LogParser;
-using LogParser.Repositories;
-using LogParser.Entities;
-using LogParser.Business;
+using Oathsworn;
+using Oathsworn.Repositories;
+using Oathsworn.Entities;
+using Oathsworn.Business;
 
-namespace LogParserTests
+namespace OathswornTests
 {
     public class Tests
     {
         private readonly DatabaseContext dbContext;
-        private readonly IDatabaseRepository<IPAddress> _IPAddress;
-        private readonly IDatabaseRepository<URL> _URL;
-        private readonly IDatabaseRepository<Visit> _visit;
-        private readonly IFileParser _fileParser;
-        private readonly ILogData _logData;
 
         public Tests()
         {

@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LogParser\LogParser.csproj" />
+    <ProjectReference Include="..\Oathsworn\Oathsworn.csproj" />
   </ItemGroup>
 
 </Project>
