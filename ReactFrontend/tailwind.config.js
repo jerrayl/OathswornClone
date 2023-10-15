@@ -1,23 +1,9 @@
-const colors = require("tailwindcss/colors");
-
 module.exports = {
-    content: ["./src/**/*.{html,js}"],
+    content: ["./src/**/*.{html,js,ts,tsx}"],
     theme: {
-        colors: {
-            stone: colors.stone,
-            white: colors.white,
-            red: colors.red,
-            green: colors.green
-        },
-        fontFamily: {
-            sans: ["sans"],
-            serif: ["Lora", "serif"]
-        },
         extend: {}
     },
-    plugins: [
-        require('tailwind-scrollbar'),
-    ],
+    plugins: [],
     extend: {
     }
 };

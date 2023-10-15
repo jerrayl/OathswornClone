@@ -6,12 +6,3 @@ const api = axios.create({
         'Content-Type': 'application/json',
     },
 });
-
-export const getBuildings = async () => {
-    return (await api.get('buildings')).data;
-}
-
-export const getTroops = async () => {
-    return (await api.get('troops')).data;
-}
-

@@ -1,14 +1,8 @@
 import "./App.css";
-import React from "react";
-import SignalR from "./SignalR";
+import { Game } from "./components/Game";
 
 function App() {
-
-    return (
-        <div className="h-screen bg-[url('./assets/background1.jpg')] bg-cover">
-            <SignalR />
-        </div>
-    );
+    return <Game />;
 }
 
 export default App;
