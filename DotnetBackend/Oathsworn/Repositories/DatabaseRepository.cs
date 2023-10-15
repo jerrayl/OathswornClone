@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using RAZE.Entities;
+using Oathsworn.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace RAZE.Repositories
+namespace Oathsworn.Repositories
 {
     public class DatabaseRepository<T> : IDatabaseRepository<T> where T : BaseEntity
     {

@@ -1,8 +1,7 @@
-﻿using RAZE.Models;
-using RAZE.Entities;
+﻿using Oathsworn.Entities;
 using AutoMapper;
 
-namespace RAZE.AutoMapper
+namespace Oathsworn.AutoMapper
 {
     public class AutoMapperProfileConfiguration : Profile
     {
@@ -14,8 +13,6 @@ namespace RAZE.AutoMapper
         protected AutoMapperProfileConfiguration(string profileName)
         : base(profileName)
         {
-            CreateMap<Building, BuildingModel>()
-                .ForMember(dest => dest.Element, m => m.MapFrom(src => src.Element.Name));
         }
     }
 }

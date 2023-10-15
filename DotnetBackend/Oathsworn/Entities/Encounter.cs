@@ -1,0 +1,12 @@
+using System.Collections.Generic;
+
+namespace Oathsworn.Entities
+{
+    public class Encounter : BaseEntity
+    {
+        public virtual List<EncounterPlayer> EncounterPlayers { get; set; }
+        public virtual Boss Boss { get; set; }
+        public virtual List<Minion> Minions { get; set; }
+        public virtual List<EncounterMightDeck> EncounterMightDecks { get; set; }
+    }
+}

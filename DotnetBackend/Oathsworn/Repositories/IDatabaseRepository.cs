@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using RAZE.Entities;
+using Oathsworn.Entities;
 
-namespace RAZE.Repositories
+namespace Oathsworn.Repositories
 {
     public interface IDatabaseRepository<T> where T : BaseEntity
     {

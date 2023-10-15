@@ -4,13 +4,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using RAZE.Database;
-using RAZE.Business;
-using RAZE.Repositories;
-using RAZE.AutoMapper;
-using RAZE.SignalR;
+using Oathsworn.Database;
+using Oathsworn.Business;
+using Oathsworn.Repositories;
+using Oathsworn.AutoMapper;
+using Oathsworn.SignalR;
 
-namespace RAZE
+namespace Oathsworn
 {
     public class Startup
     {
@@ -27,15 +27,13 @@ namespace RAZE
 
             services.AddDbContext<DatabaseContext>();
 
-            services.AddScoped<IInfo, Info>();
-            services.AddScoped<IPlayer, Player>();
             services.AddScoped<IGame, Game>();
             services.AddScoped(typeof(IDatabaseRepository<>), typeof(DatabaseRepository<>));
 
             // Add Swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "RAZE API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Oathsworn API", Version = "v1" });
                 c.DocInclusionPredicate((_, api) => !string.IsNullOrWhiteSpace(api.GroupName));
                 c.TagActionsBy(api => new[] { api.GroupName });
             });
@@ -56,7 +54,7 @@ namespace RAZE
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("v1/swagger.json", "RAZE");
+                c.SwaggerEndpoint("v1/swagger.json", "Oathsworn");
             });
 
             if (env.IsDevelopment())

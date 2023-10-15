@@ -1,14 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Collections.Generic;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore.Sqlite;
-using Microsoft.Extensions.Configuration;
-using RAZE.Entities;
+using Oathsworn.Entities;
+using Action = Oathsworn.Entities.Action;
 
-namespace RAZE
+namespace Oathsworn
 {
     public class DatabaseContext : DbContext
     {
@@ -17,41 +13,65 @@ namespace RAZE
         {
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-        {
-            if (!options.IsConfigured) options.UseSqlite("Data Source=RAZE.db");
+        private string Serialize<T>(T x) {
+            return JsonSerializer.Serialize(x, (JsonSerializerOptions)null);
         }
 
-        public DbSet<Account> Accounts { get; set; }
+        private Dictionary<T, int> Deserialize<T>(string x) {
+            return JsonSerializer.Deserialize<Dictionary<T, int>>(x, (JsonSerializerOptions)null);
+        }
 
-        public DbSet<BonusType> BonusTypes { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        {
+            if (!options.IsConfigured) options.UseSqlite("Data Source=Oathsworn.db");
+        }
 
-        public DbSet<Building> Buildings { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+                .Entity<Boss>()
+                .Property(e => e.Health)
+                .HasConversion(x => Serialize(x), x => Deserialize<BossPosition>(x));
+            
+            modelBuilder
+                .Entity<Boss>()
+                .Property(e => e.Might)
+                .HasConversion(x => Serialize(x), x => Deserialize<Might>(x));
+            
+            modelBuilder
+                .Entity<Minion>()
+                .Property(e => e.Might)
+                .HasConversion(x => Serialize(x), x => Deserialize<Might>(x));
+            
+            modelBuilder
+                .Entity<EncounterPlayer>()
+                .Property(e => e.Tokens)
+                .HasConversion(x => Serialize(x), x => Deserialize<Token>(x));
 
-        public DbSet<BuildingCost> BuildingCosts { get; set; }
+            modelBuilder
+                .Entity<Player>()
+                .Property(e => e.Might)
+                .HasConversion(x => Serialize(x), x => Deserialize<Might>(x));
+            
+            modelBuilder
+                .Entity<Item>()
+                .Property(e => e.Might)
+                .HasConversion(x => Serialize(x), x => Deserialize<Might>(x));
+        }
 
-        public DbSet<Element> Elements { get; set; }
-
-        public DbSet<GameRoom> GameRooms { get; set; }
-
-        public DbSet<PlayerBonus> PlayerBonuses { get; set; }
-
-        public DbSet<PlayerBuilding> PlayerBuildings { get; set; }
-
-        public DbSet<PlayerProduction> PlayerProductions { get; set; }
-
-        public DbSet<PlayerResource> PlayerResources { get; set; }
-
-        public DbSet<PlayerSession> PlayerSessions { get; set; }
-
-        public DbSet<PlayerTroop> PlayerTroops { get; set; }
-
-        public DbSet<Request> Requests { get; set; }
-
-        public DbSet<StatusType> StatusTypes { get; set; }
-
-        public DbSet<Troop> Troops { get; set; }
-
-        public DbSet<TroopCost> TroopCosts { get; set; }
+        public DbSet<Ability> Abilities { get; set; }
+        public DbSet<Action> Actions { get; set; }
+        public DbSet<Boss> Bosses { get; set; }
+        public DbSet<BossAction> BossActions { get; set; }
+        public DbSet<Encounter> Encounters { get; set; }
+        public DbSet<EncounterMightDeck> EncounterMightDecks { get; set; }
+        public DbSet<EncounterPlayer> EncounterPlayers { get; set; }
+        public DbSet<FreeCompany> FreeCompanies { get; set; }
+        public DbSet<Item> Items { get; set; }
+        public DbSet<MightCard> MightCards { get; set; }
+        public DbSet<Minion> Minons { get; set; }
+        public DbSet<Player> Players { get; set; }
+        public DbSet<PlayerAbility> PlayerAbilities { get; set; }
+        public DbSet<PlayerItem> PlayerItems { get; set; }
     }
 }

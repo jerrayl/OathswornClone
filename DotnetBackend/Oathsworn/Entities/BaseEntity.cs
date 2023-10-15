@@ -1,4 +1,4 @@
-namespace RAZE.Entities
+namespace Oathsworn.Entities
 {
     public class BaseEntity
     {
