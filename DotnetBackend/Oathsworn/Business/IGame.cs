@@ -7,7 +7,9 @@ namespace Oathsworn.Business
     {
         int StartEncounter();
         GameStateModel GetGameState(int encounterId);
-        List<MightCardModel> StartAttack(int encounterId, AttackModel attackModel);
-        List<MightCardModel> RerollAttack (int encounterId, RerollModel rerollModel);
+        AttackResponseModel StartAttack(int encounterId, AttackModel attackModel);
+        AttackResponseModel RerollAttack (int encounterId, RerollModel rerollModel);
+        GameStateModel CompleteAttack(int encounterId, int attackId);
+        GameStateModel Move(int encounterId, MoveModel moveModel);
     }
 }

@@ -202,6 +202,36 @@ namespace Oathsworn.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Attacks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    PlayerId = table.Column<int>(type: "INTEGER", nullable: false),
+                    BossId = table.Column<int>(type: "INTEGER", nullable: false),
+                    BossPart = table.Column<int>(type: "INTEGER", nullable: false),
+                    BonusDamage = table.Column<int>(type: "INTEGER", nullable: false),
+                    EmpowerTokensUsed = table.Column<int>(type: "INTEGER", nullable: false),
+                    RerollTokensUsed = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Attacks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Attacks_Bosses_BossId",
+                        column: x => x.BossId,
+                        principalTable: "Bosses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Attacks_Players_PlayerId",
+                        column: x => x.PlayerId,
+                        principalTable: "Players",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EncounterPlayers",
                 columns: table => new
                 {
@@ -230,35 +260,6 @@ namespace Oathsworn.Migrations
                         principalTable: "Players",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MightCards",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    DeckId = table.Column<int>(type: "INTEGER", nullable: false),
-                    AttackId = table.Column<int>(type: "INTEGER", nullable: true),
-                    Value = table.Column<int>(type: "INTEGER", nullable: false),
-                    Type = table.Column<int>(type: "INTEGER", nullable: false),
-                    IsCritical = table.Column<bool>(type: "INTEGER", nullable: false),
-                    EncounterMightDeckId = table.Column<int>(type: "INTEGER", nullable: true),
-                    PlayerId = table.Column<int>(type: "INTEGER", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MightCards", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_MightCards_EncounterMightDecks_EncounterMightDeckId",
-                        column: x => x.EncounterMightDeckId,
-                        principalTable: "EncounterMightDecks",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_MightCards_Players_PlayerId",
-                        column: x => x.PlayerId,
-                        principalTable: "Players",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -315,6 +316,87 @@ namespace Oathsworn.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "AttackMinion",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    AttackId = table.Column<int>(type: "INTEGER", nullable: false),
+                    MinionId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AttackMinion", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AttackMinion_Attacks_AttackId",
+                        column: x => x.AttackId,
+                        principalTable: "Attacks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AttackMinion_Minons_MinionId",
+                        column: x => x.MinionId,
+                        principalTable: "Minons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MightCards",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    DeckId = table.Column<int>(type: "INTEGER", nullable: false),
+                    AttackId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Value = table.Column<int>(type: "INTEGER", nullable: false),
+                    Type = table.Column<int>(type: "INTEGER", nullable: false),
+                    IsCritical = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsDrawnFromCritical = table.Column<bool>(type: "INTEGER", nullable: false),
+                    EncounterMightDeckId = table.Column<int>(type: "INTEGER", nullable: true),
+                    PlayerId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MightCards", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MightCards_Attacks_AttackId",
+                        column: x => x.AttackId,
+                        principalTable: "Attacks",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_MightCards_EncounterMightDecks_EncounterMightDeckId",
+                        column: x => x.EncounterMightDeckId,
+                        principalTable: "EncounterMightDecks",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_MightCards_Players_PlayerId",
+                        column: x => x.PlayerId,
+                        principalTable: "Players",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AttackMinion_AttackId",
+                table: "AttackMinion",
+                column: "AttackId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AttackMinion_MinionId",
+                table: "AttackMinion",
+                column: "MinionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Attacks_BossId",
+                table: "Attacks",
+                column: "BossId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Attacks_PlayerId",
+                table: "Attacks",
+                column: "PlayerId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_BossActions_ActionId",
                 table: "BossActions",
@@ -346,6 +428,11 @@ namespace Oathsworn.Migrations
                 table: "EncounterPlayers",
                 column: "PlayerId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MightCards_AttackId",
+                table: "MightCards",
+                column: "AttackId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MightCards_EncounterMightDeckId",
@@ -392,6 +479,9 @@ namespace Oathsworn.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AttackMinion");
+
+            migrationBuilder.DropTable(
                 name: "BossActions");
 
             migrationBuilder.DropTable(
@@ -401,19 +491,19 @@ namespace Oathsworn.Migrations
                 name: "MightCards");
 
             migrationBuilder.DropTable(
-                name: "Minons");
-
-            migrationBuilder.DropTable(
                 name: "PlayerAbilities");
 
             migrationBuilder.DropTable(
                 name: "PlayerItems");
 
             migrationBuilder.DropTable(
+                name: "Minons");
+
+            migrationBuilder.DropTable(
                 name: "Actions");
 
             migrationBuilder.DropTable(
-                name: "Bosses");
+                name: "Attacks");
 
             migrationBuilder.DropTable(
                 name: "EncounterMightDecks");
@@ -423,6 +513,9 @@ namespace Oathsworn.Migrations
 
             migrationBuilder.DropTable(
                 name: "Items");
+
+            migrationBuilder.DropTable(
+                name: "Bosses");
 
             migrationBuilder.DropTable(
                 name: "Players");

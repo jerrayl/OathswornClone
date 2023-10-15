@@ -6,7 +6,6 @@ namespace Oathsworn.Entities
     {
         public int PlayerId { get; set; }
         public int BossId { get; set; }
-        public List<int> MinionIds { get; set; }
         public BossPart BossPart { get; set; }
         public int BonusDamage { get; set; }
         public int EmpowerTokensUsed { get; set; }
@@ -14,7 +13,7 @@ namespace Oathsworn.Entities
 
         public virtual Player Player { get; set; }
         public virtual Boss Boss { get; set; }
-        public virtual List<Minion> Minions { get; set; }
+        public virtual List<AttackMinion> AttackMinions { get; set; }
         public virtual List<MightCard> MightCards { get; set; }
     }
 }

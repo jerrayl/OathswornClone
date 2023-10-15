@@ -7,6 +7,7 @@ namespace Oathsworn.Entities
         public int Value { get; set; }
         public Might Type { get; set; }
         public bool IsCritical { get; set; }
+        public bool IsDrawnFromCritical { get; set; }
 
         public virtual EncounterMightDeck EncounterMightDeck { get; set; }
     }

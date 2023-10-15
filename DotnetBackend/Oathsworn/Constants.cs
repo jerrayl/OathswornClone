@@ -55,6 +55,7 @@ namespace Oathsworn
         // Game constants
         public const int EMPOWER_TOKEN_VALUE = 3;
         public const int ANIMUS_TOKEN_VALUE = 2;
+        public const int NUM_ZEROES_TO_MISS = 2;
 
         // SignalR Responses
         public const string SUCCESS = "SUCCESS";
