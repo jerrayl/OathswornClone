@@ -38,36 +38,51 @@
 }
 
 .main {
-  --s: 80px;  /* size  */
-  --m: 1px;    /* margin */
-  --f: calc(1.732 * var(--s) + 4 * var(--m)  - 1px);
+  display: grid;
+  grid-template-columns: repeat(9,calc(var(--s) + 2*var(--mh)));
+  justify-content:center;
+  --s: 100px; /* size */
+  --r: 1; /* ratio */
+  /* clip-path */
+  --h: 0.25;  
+  --v: 0.5;  
+  --hc:calc(clamp(0,var(--h),0.5) * var(--s)) ;
+  --vc:calc(clamp(0,var(--v),0.5) * var(--s) * var(--r)); 
+  
+  /*margin */
+  --mv: 1px; /* vertical */
+  --mh: calc(var(--mv) + (var(--s) - 2*var(--hc))/2); /* horizontal */
+  /* for the float*/
+  --f: calc(2*var(--s)*var(--r) + 4*var(--mv)  - 2*var(--vc) - 2px);
 }
 
 .container {
+  grid-column: 1/-1;
   font-size: 0; /*disable white space between inline block element */
 }
 
 .container div {
   width: var(--s);
-  margin: var(--m);
-  height: calc(var(--s)*1.1547); 
+  margin: var(--mv) var(--mh);
+  height: calc(var(--s)*var(--r)); 
   display: inline-block;
-  clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
+  font-size:initial;
+  clip-path: polygon(var(--hc) 0, calc(100% - var(--hc)) 0,100% var(--vc),100% calc(100% - var(--vc)), calc(100% - var(--hc)) 100%,var(--hc) 100%,0 calc(100% - var(--vc)),0 var(--vc));
   background: #f0f0f0;
-  margin-bottom: calc(var(--m) - var(--s)*0.2885); 
+  margin-bottom: calc(var(--mv) - var(--vc)); 
 }
 
 .container div:nth-child(odd) {
   background:#d4d4d4;
 }
 
-.container::before {
+.container::before{
   content: "";
-  width: calc(var(--s)/2 + var(--m));
+  width: calc(var(--s)/2 + var(--mh));
   float: left;
   height: 120%;
   shape-outside: repeating-linear-gradient(     
-                   #0000 0 calc(var(--f) - 3px),      
+                   #0000 0 calc(var(--f) - 2px),      
                    #000  0 var(--f));
 }
 
