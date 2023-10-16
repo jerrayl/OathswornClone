@@ -5,3 +5,4 @@ DotnetBackend/OathswornTests/bin
 DotnetBackend/.vs
 DotnetBackend/Oathsworn/Oathsworn.db
 .vscode
+ReactFrontend/src/utils/apiModels.ts
