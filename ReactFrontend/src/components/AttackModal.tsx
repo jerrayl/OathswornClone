@@ -91,7 +91,7 @@ export const AttackModal = ({ closeModal }: AttackModalProps) => {
                                         <img className="w-8 h-8" src={redraw} alt="redraw" />: {attackStore.redrawTokensUsed}
                                     </div>
                                     <div className="mt-2 font-lg text-lg">
-                                        {attackStore.cardsDrawn.filter(x => x.value === 0).length >= 2 ? "Miss" : `${attackStore.cardsDrawn.reduce((partialSum, card) => partialSum + card.value, 0)} damage`}
+                                        {attackStore.cardsDrawn.filter(x => x.value === 0).length >= 2 ? "Miss" : `${attackStore.cardsDrawn.filter(card => !card.isDrawnFromCritical).reduce((partialSum, card) => partialSum + card.value, 0)} damage`}
                                     </div>
                                     <div className="grid grid-cols-6 gap-4 mt-3">
                                         {attackStore.cardsDrawn.filter(x => !x.isDrawnFromCritical).map((card, i) =>
@@ -110,7 +110,7 @@ export const AttackModal = ({ closeModal }: AttackModalProps) => {
                                 </div>
                                 : <div className="flex flex-col justify-between px-4 py-8">
                                     <div className="flex text-2xl justify-center">
-                                        <img className="w-8 h-8" src={empower} alt="empower" />: 2
+                                        <img className="w-8 h-8" src={empower} alt="empower" />: {attackStore.empowerTokensUsed}
                                     </div>
                                     <div className="flex justify-around mt-2 space-x-4">
                                         {[...attackStore.mightCards.entries()].map((might, i) =>
