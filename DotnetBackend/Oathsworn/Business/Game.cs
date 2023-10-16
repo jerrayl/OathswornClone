@@ -105,6 +105,10 @@ namespace Oathsworn.Business
             attack.RerollTokensUsed += rerollModel.RerollTokensUsed;
             _attacks.Update(attack);
 
+            var cardsNotRedrawn = attack.MightCards
+                .Where(x => !rerollModel.MightCards.Contains(x.Id))
+                .ToList();
+
             var cardsToRedraw = attack.MightCards
                 .Where(x => rerollModel.MightCards.Contains(x.Id))
                 .ToList();
@@ -114,8 +118,7 @@ namespace Oathsworn.Business
 
             _mightCards.DeleteBatch(cardsToRedraw);
 
-            var cardModels = attack.MightCards
-                .Where(x => !rerollModel.MightCards.Contains(x.Id))
+            var cardModels = cardsNotRedrawn
                 .Concat(critCards)
                 .Concat(nonCritCards)
                 .Select(x => _mapper.Map<MightCard, MightCardModel>(x))
