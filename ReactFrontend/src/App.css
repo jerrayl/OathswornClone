@@ -70,3 +70,7 @@
                    #0000 0 calc(var(--f) - 3px),      
                    #000  0 var(--f));
 }
+
+.h-2px {
+  height: 2px;
+}

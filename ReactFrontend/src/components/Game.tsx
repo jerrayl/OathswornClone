@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Modal from "./Modal";
+import { AttackModal } from "./AttackModal";
 
 export const BOARD = Array(161).fill([]);
 
@@ -8,16 +8,14 @@ export const Game = () => {
 
   return (
     <div>
-      {showModal && <Modal/>}
+      {showModal && <AttackModal closeModal={() => setShowModal(false)}/>}
       <div className="flex justify-evenly mt-2">
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded caret-transparent" onClick={() => setShowModal(true)}>
           Attack
         </button>
       </div>
       <div className="main flex">
-
         <div className="container">
-
           {
             BOARD.map(x => <div />)
           }
