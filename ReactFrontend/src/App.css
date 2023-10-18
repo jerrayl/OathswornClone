@@ -39,7 +39,7 @@
 
 .main {
   display: grid;
-  grid-template-columns: repeat(9,calc(var(--s) + 2*var(--mh)));
+  grid-template-columns: calc(var(--s)/2 + var(--mh)) repeat(9,calc(var(--s) + 2*var(--mh)) );
   justify-content:center;
   --s: 100px; /* size */
   --r: 1; /* ratio */
@@ -59,6 +59,7 @@
 .container {
   grid-column: 1/-1;
   font-size: 0; /*disable white space between inline block element */
+  margin-left: -35px;
 }
 
 .container div {
@@ -68,12 +69,12 @@
   display: inline-block;
   font-size:initial;
   clip-path: polygon(var(--hc) 0, calc(100% - var(--hc)) 0,100% var(--vc),100% calc(100% - var(--vc)), calc(100% - var(--hc)) 100%,var(--hc) 100%,0 calc(100% - var(--vc)),0 var(--vc));
-  background: #f0f0f0;
+  background:#d4d4d4;
   margin-bottom: calc(var(--mv) - var(--vc)); 
 }
 
-.container div:nth-child(odd) {
-  background:#d4d4d4;
+.container div:nth-child(18n+1) {
+  visibility: hidden;
 }
 
 .container::before{
