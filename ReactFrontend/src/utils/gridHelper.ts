@@ -1,4 +1,4 @@
-import { Position } from "./types";
+import { Position } from "./apiModels";
 
 export const Equal = (position1: Position | null, position2: Position | null): boolean => {
     return !!position1 && !!position2 && position1.xPosition === position2.xPosition && position1.yPosition === position2.yPosition;

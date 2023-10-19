@@ -1,4 +1,4 @@
-import { Position } from "./types"
+import { Position } from "./apiModels"
 
 export const SIGNALR_CODES = {
     SUCCESS: "SUCCESS"

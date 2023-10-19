@@ -1,3 +1,4 @@
+import { Class } from "../../utils/apiModels";
 import blade from "./Blade.png";
 import cur from "./Cur.png";
 import exile from "./Exile.png";
@@ -11,18 +12,18 @@ import warbear from "./Warbear.png";
 import warden from "./Warden.png";
 import witch from "./Witch.png";
 
-export const iconMap : {[key: string]: string} = {
-    "Blade" : blade,
-    "Cur": cur,
-    "Exile": exile,    
-    "Grove Maiden": grovemaiden,
-    "Harbinger": harbinger,
-    "Huntress": huntress,    
-    "Penitent" : penitent,
-    "Priest": priest,
-    "Ranger": ranger,    
-    "Warbear": warbear,
-    "Warden": warden,
-    "Witch": witch
+export const classIconMap : {[key in Class]: string} = {
+    [Class.Blade] : blade,
+    [Class.Cur]: cur,
+    [Class.Exile]: exile,    
+    [Class.GroveMaiden]: grovemaiden,
+    [Class.Harbinger]: harbinger,
+    [Class.Huntress]: huntress,    
+    [Class.Penitent]: penitent,
+    [Class.Priest]: priest,
+    [Class.Ranger]: ranger,    
+    [Class.Warbear]: warbear,
+    [Class.Warden]: warden,
+    [Class.Witch]: witch
 }
 

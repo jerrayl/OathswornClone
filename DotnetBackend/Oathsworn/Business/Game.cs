@@ -45,9 +45,52 @@ namespace Oathsworn.Business
             _mapper = mapper;
         }
 
-        public GameStateModel Move(int encounterId, MoveModel moveModel)
+        public void CreatePlayer(CreatePlayerModel moveModel)
         {
             throw new NotImplementedException();
+        }
+
+        public GameStateModel Move(int encounterId, MoveModel moveModel)
+        {
+            var player = _encounterPlayers.ReadOne(x => x.EncounterId == encounterId && x.PlayerId == moveModel.PlayerId);
+
+            if (player is null)
+            {
+                throw new Exception("Player not found");
+            }
+
+            if (GridHelper.IsValidPath(new List<IPosition>(){player}.Concat(moveModel.Positions).ToList()) && player.CurrentAnimus >= moveModel.Positions.Count)
+            {
+                player.CurrentAnimus -= moveModel.Positions.Count;
+                var lastPosition = moveModel.Positions.Last();
+                player.XPosition = lastPosition.XPosition;
+                player.YPosition = lastPosition.YPosition;
+                _encounterPlayers.Update(player);
+            }
+
+            return GetGameState(encounterId);
+        }
+
+        public void SpendToken(int encounterId, SpendTokenModel spendTokenModel)
+        {
+            var player = _encounterPlayers.ReadOne(x => x.EncounterId == encounterId && x.PlayerId == spendTokenModel.PlayerId);
+
+            if (player is null)
+            {
+                throw new Exception("Player not found");
+            }
+
+            if (spendTokenModel.Token == Token.Animus && player.Tokens[Token.Animus] > 0)
+            {
+                player.Tokens[Token.Animus] -= 1;
+                player.CurrentAnimus += Constants.ANIMUS_TOKEN_VALUE;
+                _encounterPlayers.Update(player);
+            }
+
+            if (spendTokenModel.Token == Token.Battleflow && player.Tokens[Token.Battleflow] > 0)
+            {
+                //Perform logic
+            }
         }
 
         public GameStateModel CompleteAttack(int encounterId, int attackId)

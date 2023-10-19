@@ -40,7 +40,7 @@ namespace Oathsworn.Business
             return IsValidPosition(positions.First()) && positions
                 .Skip(1)
                 .Select((position, index) => new { index, position })
-                .All(item => IsValidPosition(item.position) && IsAdjacent(item.position, positions[item.index - 1]));
+                .All(item => IsValidPosition(item.position) && IsAdjacent(item.position, positions[item.index]));
         }
 
         public static bool IsAdjacent(IPosition position1, IPosition position2)
@@ -53,7 +53,7 @@ namespace Oathsworn.Business
 
         public static bool IsValidPosition(IPosition position)
         {
-            return position.XPosition <= 8 && position.XPosition >= -8 && position.YPosition <= 8 && position.YPosition >= 8;
+            return position.XPosition <= 8 && position.XPosition >= -8 && position.YPosition <= 8 && position.YPosition >= -8;
         }
     }
 }

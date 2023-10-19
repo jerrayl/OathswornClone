@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { AttackModel, RerollModel } from './apiModels';
+import { AttackModel, MoveModel, RerollModel } from './apiModels';
 
 const api = axios.create({
     baseURL: `https://localhost:5001/api/`,
@@ -18,4 +18,12 @@ export const rerollAttack = async (model: RerollModel) => {
 
 export const completeAttack = async (attackId: number) => {
     return (await api.post(`complete-attack?encounterId=${1}&attackId=${attackId}`)).data;
+}
+
+export const move = async (model: MoveModel) => {
+    return (await api.post(`move?encounterId=${1}`, model)).data;
+}
+
+export const getGameState = async () => {
+    return (await api.get(`get-gamestate?encounterId=${1}`)).data;
 }

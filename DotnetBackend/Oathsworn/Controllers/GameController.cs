@@ -37,6 +37,74 @@ namespace Oathsworn.Controllers
         }
 
         [HttpPost]
+        [Route("create-player")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ApiExplorerSettings(GroupName = "Game")]
+        public IActionResult Move([FromQuery] int encounterId, [FromBody] CreatePlayerModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.Select(x => x.Value.Errors));
+            }
+            try
+            {
+                _game.CreatePlayer(model);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("move")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ApiExplorerSettings(GroupName = "Game")]
+        public IActionResult Move([FromQuery] int encounterId, [FromBody] MoveModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.Select(x => x.Value.Errors));
+            }
+            try
+            {
+                return Ok(_game.Move(encounterId, model));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("spend-token")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ApiExplorerSettings(GroupName = "Game")]
+        public IActionResult SpendToken([FromQuery] int encounterId, [FromBody] SpendTokenModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.Select(x => x.Value.Errors));
+            }
+            try
+            {
+                _game.SpendToken(encounterId, model);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost]
         [Route("start-attack")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

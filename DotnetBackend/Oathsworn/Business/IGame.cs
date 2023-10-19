@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Oathsworn.Models;
 
 namespace Oathsworn.Business
@@ -11,5 +10,7 @@ namespace Oathsworn.Business
         AttackResponseModel RerollAttack (int encounterId, RerollModel rerollModel);
         GameStateModel CompleteAttack(int encounterId, int attackId);
         GameStateModel Move(int encounterId, MoveModel moveModel);
+        void CreatePlayer(CreatePlayerModel createPlayerModel);
+        void SpendToken(int encounterId, SpendTokenModel spendTokenModel);
     }
 }
