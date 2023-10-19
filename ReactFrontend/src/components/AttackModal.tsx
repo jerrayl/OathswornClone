@@ -1,9 +1,10 @@
+import React from "react";
+import { Observer } from "mobx-react";
 import chevronUp from "../assets/icons/chevron-up.svg";
 import chevronDown from "../assets/icons/chevron-down.svg";
 import empower from "../assets/icons/Empower.png";
 import redraw from "../assets/icons/Redraw.png";
 import { AttackStore } from "../stores/AttackStore";
-import { Observer } from "mobx-react";
 import { Might } from "../utils/apiModels";
 import { MightCard } from "../utils/types";
 import { Button } from "./shared/Button";

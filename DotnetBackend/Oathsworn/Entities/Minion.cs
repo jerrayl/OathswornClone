@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Oathsworn.Entities
 {
-    public class Minion : BaseEntity
+    public class Minion : BaseEntity, IPosition
     {
         public int EncounterId { get; set; }
         public int Health { get; set; }

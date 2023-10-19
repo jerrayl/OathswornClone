@@ -69,7 +69,6 @@
   display: inline-block;
   font-size:initial;
   clip-path: polygon(var(--hc) 0, calc(100% - var(--hc)) 0,100% var(--vc),100% calc(100% - var(--vc)), calc(100% - var(--hc)) 100%,var(--hc) 100%,0 calc(100% - var(--vc)),0 var(--vc));
-  background:#d4d4d4;
   margin-bottom: calc(var(--mv) - var(--vc)); 
 }
 

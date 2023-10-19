@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Oathsworn.Entities
 {
-    public class EncounterPlayer : BaseEntity
+    public class EncounterPlayer : BaseEntity, IPosition
     {
         public int EncounterId { get; set; }
         public int PlayerId { get; set; }

@@ -7,3 +7,8 @@ export type MightCard = {
     isCritical: boolean;
     isDrawnFromCritical: boolean;
 }
+
+export type Position = {
+    xPosition: number;
+    yPosition: number;
+}

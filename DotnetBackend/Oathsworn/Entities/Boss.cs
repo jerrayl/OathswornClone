@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Oathsworn.Entities
 {
-    public class Boss : BaseEntity
+    public class Boss : BaseEntity, IPosition
     {
         public int EncounterId { get; set; }
         public Dictionary<BossPart, int> Health { get; set; }

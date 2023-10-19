@@ -50,6 +50,12 @@ namespace Oathsworn
         GroveMaiden
     }
 
+    public enum Template
+    {
+        SmallCircle,
+        LargeCircle
+    }
+
     public class Constants
     {
         // Game constants
