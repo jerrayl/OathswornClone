@@ -94,7 +94,7 @@ export const AttackModal = observer(({ attackStore, closeModal }: AttackModalPro
                             </div>
                             : <div className="flex flex-col justify-between px-4 py-8">
                                 <div className="flex text-2xl justify-center">
-                                    <img className="w-8 h-8" src={tokenIconMap[Token.Empower]} alt={Token.Empower.toString()} />: {attackStore.empowerTokensUsed}
+                                    <img className="w-8 h-8" src={tokenIconMap[Token.Empower]} alt={Token.Empower.toString()} />: {attackStore.empowerTokensUsed}{attackStore.leftoverEmpowerPoints && "*"}
                                 </div>
                                 <div className="flex justify-around mt-2 space-x-4">
                                     {[...attackStore.mightCards.entries()].map((might, i) =>

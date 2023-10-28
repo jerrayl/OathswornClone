@@ -148,7 +148,8 @@ namespace Oathsworn.Business
             attack.RerollTokensUsed += rerollModel.RerollTokensUsed;
             _attacks.Update(attack);
 
-            var cardsNotRedrawn = attack.MightCards
+            var cardResult = attack.MightCards
+                // intialize to cards not redrawn
                 .Where(x => !rerollModel.MightCards.Contains(x.Id))
                 .ToList();
 
@@ -157,13 +158,24 @@ namespace Oathsworn.Business
                 .ToList();
 
             var critCards = DrawCardsFromCritCards(cardsToRedraw.First().DeckId, attack.Id, cardsToRedraw);
+            while (critCards.Any(x => x.IsCritical))
+            {
+                cardsToRedraw.AddRange(critCards);
+                critCards = DrawCardsFromCritCards(cardsToRedraw.First().DeckId, attack.Id, critCards);
+            }
+            cardResult.AddRange(critCards);
+
             var nonCritCards = DrawCardsFromCards(cardsToRedraw.First().DeckId, attack.Id, cardsToRedraw.Where(x => !x.IsCritical).ToList());
+            while (nonCritCards.Any(x => x.IsCritical))
+            {
+                cardsToRedraw.AddRange(nonCritCards);
+                nonCritCards = DrawCardsFromCritCards(cardsToRedraw.First().DeckId, attack.Id, nonCritCards);
+            }
+            cardResult.AddRange(nonCritCards);
 
             _mightCards.DeleteBatch(cardsToRedraw);
 
-            var cardModels = cardsNotRedrawn
-                .Concat(critCards)
-                .Concat(nonCritCards)
+            var cardModels = cardResult
                 .Select(x => _mapper.Map<MightCard, MightCardModel>(x))
                 .ToList();
 
@@ -186,8 +198,17 @@ namespace Oathsworn.Business
             // Locate Player (in encounter)
             // Locate Enemy (in encounter)
             // Check that Player is able to attack enemy, record parts hit
-            // Check that a valid number of might dice have been selected
-            // Check that Player is able to empower might cards
+
+            if (attackModel.Might.Values.Sum() > Constants.MAXIMUM_ATTACK_MIGHT_CARDS)
+            {
+                throw new Exception("Too many might cards");
+            }
+
+            if (CardsHelper.GetEmpowerTokensNeeded(attackModel.Might, player.Might) != attackModel.EmpowerTokensUsed)
+            {
+                throw new Exception("Invalid number of empower tokens");
+            }
+
             // Calculate bonus damage that would be done
 
             var attack = new Attack()

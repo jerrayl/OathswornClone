@@ -37,7 +37,7 @@ export const Game = () => {
                     className={boardStore.getTileColor(position)}
                     onClick={() => { boardStore.selectTile(position) }}
                   >
-                    {occupant && <img className="w-14 h-14 mt-1 ml-1" src={classIconMap[occupant.class]} alt={occupant.class.toString()}/>}
+                    {occupant && <img className="w-14 h-14 mt-2 ml-2" src={classIconMap[occupant.class]} alt={occupant.class.toString()}/>}
                   </div>
                 })
               }

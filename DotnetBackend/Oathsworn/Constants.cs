@@ -62,6 +62,11 @@ namespace Oathsworn
         public const int EMPOWER_TOKEN_VALUE = 3;
         public const int ANIMUS_TOKEN_VALUE = 2;
         public const int NUM_ZEROES_TO_MISS = 2;
+        public const int MAXIMUM_ATTACK_MIGHT_CARDS = 14;
+        public const int MAXIMUM_PLAYER_MIGHT = 4;
+        public const int BLACK_MIGHT_VALUE = 3;
+        public const int RED_MIGHT_VALUE = 2;
+        public const int YELLOW_MIGHT_VALUE = 1;
 
         // SignalR Responses
         public const string SUCCESS = "SUCCESS";
