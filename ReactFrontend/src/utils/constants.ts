@@ -1,7 +1,21 @@
-import { Position } from "./apiModels"
+import { Might, Position } from "./apiModels"
 
 export const SIGNALR_CODES = {
     SUCCESS: "SUCCESS"
+}
+
+export const COLORS = {
+    [Might.White]: "bg-gray-100 text-gray-900",
+    [Might.Yellow]: "bg-yellow-400 text-gray-900",
+    [Might.Red]: "bg-red-600 text-gray-900",
+    [Might.Black]: "bg-gray-900 text-gray-100"
+}
+
+export const HIGHLIGHTS = {
+    [Might.White]: "hover:shadow-gray-50",
+    [Might.Yellow]: "hover:shadow-yellow-200",
+    [Might.Red]: "hover:shadow-red-400",
+    [Might.Black]: "hover:shadow-gray-800"
 }
 
 export const BOARD_MAPPING: { [key: number]: Position } = {

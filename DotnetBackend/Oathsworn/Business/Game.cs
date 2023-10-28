@@ -59,7 +59,7 @@ namespace Oathsworn.Business
                 throw new Exception("Player not found");
             }
 
-            if (GridHelper.IsValidPath(new List<IPosition>(){player}.Concat(moveModel.Positions).ToList()) && player.CurrentAnimus >= moveModel.Positions.Count)
+            if (GridHelper.IsValidPath(new List<IPosition>() { player }.Concat(moveModel.Positions).ToList()) && player.CurrentAnimus >= moveModel.Positions.Count)
             {
                 player.CurrentAnimus -= moveModel.Positions.Count;
                 var lastPosition = moveModel.Positions.Last();
@@ -371,28 +371,16 @@ namespace Oathsworn.Business
             var freeCompany = new FreeCompany() { Name = "Test Free Company" };
             _freeCompanies.Add(freeCompany);
 
-            var player = new Player()
+            foreach (var index in Enumerable.Range(0, 4))
             {
-                FreeCompanyId = freeCompany.Id,
-                Class = Class.Witch,
-                Health = 5,
-                Defence = 2,
-                MaxAnimus = 8,
-                AnimusRegen = 6,
-                Might = new Dictionary<Might, int>() { { Might.White, 0 }, { Might.Yellow, 1 }, { Might.Red, 0 }, { Might.Black, 0 } }
-            };
-            _players.Add(player);
-            var encounterPlayer = new EncounterPlayer()
-            {
-                EncounterId = encounter.Id,
-                PlayerId = player.Id,
-                XPosition = 0,
-                YPosition = 0,
-                CurrentHealth = player.Health,
-                CurrentAnimus = player.AnimusRegen,
-                Tokens = new() { { Token.Animus, 0 }, { Token.Battleflow, 0 }, { Token.Defence, 0 }, { Token.Empower, 5 }, { Token.Redraw, 5 } }
-            };
-            _encounterPlayers.Add(encounterPlayer);
+                var player = DefaultPlayers.Players[index];
+                player.FreeCompanyId = freeCompany.Id;
+                _players.Add(player);
+                var encounterPlayer = DefaultPlayers.EncounterPlayers[index];
+                encounterPlayer.EncounterId = encounter.Id;
+                encounterPlayer.PlayerId = player.Id;
+                _encounterPlayers.Add(encounterPlayer);
+            }
 
             var boss = new Boss()
             {
