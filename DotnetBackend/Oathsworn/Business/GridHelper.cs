@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Oathsworn.Entities;
+using Oathsworn.Extensions;
 
 namespace Oathsworn.Business
 {
@@ -17,9 +18,22 @@ namespace Oathsworn.Business
             return Math.Max(Math.Abs(position1.XPosition - position2.XPosition), Math.Abs(position1.YPosition - position2.YPosition));
         }
 
-        public static List<IPosition> GetTemplate(IPosition position, Template template)
+        public static List<IPosition> GetTemplate(IPosition position, Template template, int size = 1, Direction? direction = null, Corner? corner = null)
         {
-            throw new NotImplementedException();
+            if (direction != null && corner != null)
+            {
+                throw new ArgumentException();
+            }
+
+            var templatePositions = template switch
+            {
+                Template.Cone => throw new NotImplementedException(),
+                Template.Wave => throw new NotImplementedException(),
+                Template.Hex => Templates.GetTemplateForHex(size),
+                _ => throw new NotImplementedException()
+            };
+
+            return templatePositions.Select(x => x.Add(position)).Where(IsValidPosition).ToList();
         }
 
         public static bool IsOnSameAxis(IPosition position1, IPosition position2)

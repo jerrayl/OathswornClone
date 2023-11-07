@@ -18,10 +18,6 @@ namespace Oathsworn
         Core,
         LeftFlank,
         RightFlank,
-        LeftFlank1,
-        LeftFlank2,
-        RightFlank1,
-        RightFlank2
     }
 
     public enum Token
@@ -52,8 +48,29 @@ namespace Oathsworn
 
     public enum Template
     {
-        SmallCircle,
-        LargeCircle
+        Cone,
+        Wave,
+        Hex
+    }
+
+    public enum Direction
+    {
+        NorthWest,
+        North,
+        NorthEast,
+        SouthEast,
+        South,
+        SouthWest
+    }
+
+    public enum Corner
+    {
+        NorthWest,
+        NorthEast,
+        East,
+        SouthEast,
+        SouthWest,
+        West
     }
 
     public class Constants
