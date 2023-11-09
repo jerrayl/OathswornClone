@@ -31,7 +31,7 @@ namespace Oathsworn
             modelBuilder
                 .Entity<Boss>()
                 .Property(e => e.Health)
-                .HasConversion(x => Serialize(x), x => Deserialize<BossPart>(x));
+                .HasConversion(x => Serialize(x), x => Deserialize<string>(x));
             
             modelBuilder
                 .Entity<Boss>()

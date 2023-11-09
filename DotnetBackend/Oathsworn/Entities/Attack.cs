@@ -6,7 +6,7 @@ namespace Oathsworn.Entities
     {
         public int PlayerId { get; set; }
         public int BossId { get; set; }
-        public BossPart BossPart { get; set; }
+        public string BossPart { get; set; }
         public int BonusDamage { get; set; }
         public int EmpowerTokensUsed { get; set; }
         public int RerollTokensUsed { get; set; }

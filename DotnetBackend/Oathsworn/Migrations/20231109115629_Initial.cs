@@ -33,7 +33,8 @@ namespace Oathsworn.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Boss = table.Column<string>(type: "TEXT", nullable: true),
-                    Stage = table.Column<int>(type: "INTEGER", nullable: false)
+                    Stage = table.Column<int>(type: "INTEGER", nullable: false),
+                    Number = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -45,7 +46,8 @@ namespace Oathsworn.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    State = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -93,7 +95,8 @@ namespace Oathsworn.Migrations
                     Defence = table.Column<int>(type: "INTEGER", nullable: false),
                     XPosition = table.Column<int>(type: "INTEGER", nullable: false),
                     YPosition = table.Column<int>(type: "INTEGER", nullable: false),
-                    Might = table.Column<string>(type: "TEXT", nullable: true)
+                    Might = table.Column<string>(type: "TEXT", nullable: true),
+                    Direction = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -209,7 +212,7 @@ namespace Oathsworn.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     PlayerId = table.Column<int>(type: "INTEGER", nullable: false),
                     BossId = table.Column<int>(type: "INTEGER", nullable: false),
-                    BossPart = table.Column<int>(type: "INTEGER", nullable: false),
+                    BossPart = table.Column<string>(type: "TEXT", nullable: true),
                     BonusDamage = table.Column<int>(type: "INTEGER", nullable: false),
                     EmpowerTokensUsed = table.Column<int>(type: "INTEGER", nullable: false),
                     RerollTokensUsed = table.Column<int>(type: "INTEGER", nullable: false)

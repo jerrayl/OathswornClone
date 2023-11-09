@@ -8,6 +8,9 @@ namespace Oathsworn.Business
 {
     public static class GridHelper
     {
+        public const int COORDINATE_MAX_VALUE = 8;
+        public const int COORDINATE_MIN_VALUE = COORDINATE_MAX_VALUE * -1;
+
         public static int? GetDistanceAlongAxis(IPosition position1, IPosition position2)
         {
             if (!IsOnSameAxis(position1, position2))
@@ -67,7 +70,18 @@ namespace Oathsworn.Business
 
         public static bool IsValidPosition(IPosition position)
         {
-            return position.XPosition <= 8 && position.XPosition >= -8 && position.YPosition <= 8 && position.YPosition >= -8;
+            return position.XPosition <= COORDINATE_MAX_VALUE && position.XPosition >= COORDINATE_MIN_VALUE && position.YPosition <= COORDINATE_MAX_VALUE && position.YPosition >= COORDINATE_MIN_VALUE;
+        }
+
+        // Overaching game rule preferences north and west to break ties, hence this direction is hardcoded 
+        public static IPosition GetNorthWestiest(List<IPosition> positions)
+        {
+            var getNorthValue = (IPosition p) => p.XPosition + 2 * p.YPosition;
+            return positions.Min(Comparer<IPosition>.Create((a, b) =>
+            {
+                var northValueDifference = getNorthValue(a) - getNorthValue(b);
+                return northValueDifference == 0 ? a.XPosition- b.XPosition : northValueDifference;
+            }));
         }
     }
 }

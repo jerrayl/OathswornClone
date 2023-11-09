@@ -4,6 +4,7 @@ namespace Oathsworn.Entities
 {
     public class Encounter : BaseEntity
     {
+        public EncounterState State { get; set; }
         public virtual List<EncounterPlayer> EncounterPlayers { get; set; }
         public virtual Boss Boss { get; set; }
         public virtual List<Minion> Minions { get; set; }

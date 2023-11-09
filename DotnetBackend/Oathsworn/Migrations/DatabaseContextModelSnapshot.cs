@@ -49,6 +49,9 @@ namespace Oathsworn.Migrations
                     b.Property<string>("Boss")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Number")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("Stage")
                         .HasColumnType("INTEGER");
 
@@ -69,8 +72,8 @@ namespace Oathsworn.Migrations
                     b.Property<int>("BossId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("BossPart")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("BossPart")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("EmpowerTokensUsed")
                         .HasColumnType("INTEGER");
@@ -118,6 +121,9 @@ namespace Oathsworn.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Defence")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Direction")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("EncounterId")
@@ -168,6 +174,9 @@ namespace Oathsworn.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("State")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");

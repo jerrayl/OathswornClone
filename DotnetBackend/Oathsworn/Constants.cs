@@ -28,7 +28,7 @@ namespace Oathsworn
         Empower,
         Animus
     }
-    
+
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Class
     {
@@ -48,9 +48,12 @@ namespace Oathsworn
 
     public enum Template
     {
+        NarrowCone,
         Cone,
-        Wave,
-        Hex
+        Hex,
+        Ring,
+        Line,
+        Wave
     }
 
     public enum Direction
@@ -73,9 +76,25 @@ namespace Oathsworn
         West
     }
 
+    public enum BossActionType
+    {
+        Move,
+        Attack
+    }
+
+    public enum EncounterState
+    {
+        InProgress,
+        PlayerStartingAction,
+        PlayerPerformingAction,
+        BossStartingAction,
+        BossPerformingAction
+    }
+
     public class Constants
     {
         // Game constants
+        public const int MAXIMUM_HEALTH = 6;
         public const int EMPOWER_TOKEN_VALUE = 3;
         public const int ANIMUS_TOKEN_VALUE = 2;
         public const int NUM_ZEROES_TO_MISS = 2;

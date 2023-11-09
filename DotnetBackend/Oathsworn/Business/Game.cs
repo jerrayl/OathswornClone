@@ -217,7 +217,7 @@ namespace Oathsworn.Business
                 // Temporarily hardcode boss as target
                 BossId = attackModel.EnemyId,
                 // Temporarily hardcode core as target
-                BossPart = BossPart.Core,
+                BossPart = (BossPart.Core, 1).ConvertToString(),
                 // Temporarily hardcode bonus damage as 0
                 BonusDamage = 0,
                 EmpowerTokensUsed = attackModel.EmpowerTokensUsed
@@ -406,7 +406,7 @@ namespace Oathsworn.Business
             var boss = new Boss()
             {
                 EncounterId = encounter.Id,
-                Health = new() { { BossPart.Front, 6 }, { BossPart.Back, 6 }, { BossPart.LeftFlank, 6 }, { BossPart.RightFlank, 6 }, { BossPart.Core, 6 } },
+                Health = new() { { (BossPart.Front, 1).ConvertToString(), 6 }, { (BossPart.Back, 1).ConvertToString(), 6 }, { (BossPart.LeftFlank, 1).ConvertToString(), 6 }, { (BossPart.RightFlank, 1).ConvertToString(), 6 }, { (BossPart.Core, 1).ConvertToString(), 6 } },
                 Defence = 2,
                 XPosition = 0,
                 YPosition = 0,

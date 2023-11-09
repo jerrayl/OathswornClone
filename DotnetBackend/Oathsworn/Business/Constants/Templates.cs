@@ -7,7 +7,7 @@ namespace Oathsworn.Business
 {
     public static class Templates
     {
-        public static IEnumerable<IPosition> GetTemplateForHex(int size)
+        public static IEnumerable<IPosition> GetTemplateForRing(int size)
         {
             if (size == 0)
             {
@@ -48,7 +48,19 @@ namespace Oathsworn.Business
                 }
             }
 
-            return positions.Concat(GetTemplateForHex(size - 1));
+            return positions;
+        }
+
+        public static IEnumerable<IPosition> GetTemplateForHex(int size)
+        {
+            var positions = new List<IPosition>();
+
+            foreach (var i in Enumerable.Range(0, size))
+            {
+                positions.Concat(GetTemplateForRing(i));
+            }
+
+            return positions;
         }
     }
 }
