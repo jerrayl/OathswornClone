@@ -6,7 +6,7 @@ using Oathsworn.Repositories;
 using Oathsworn.Models;
 using Oathsworn.Extensions;
 using AutoMapper;
-using System.Collections;
+using Oathsworn.Business.Bosses;
 
 namespace Oathsworn.Business
 {
@@ -403,15 +403,7 @@ namespace Oathsworn.Business
                 _encounterPlayers.Add(encounterPlayer);
             }
 
-            var boss = new Boss()
-            {
-                EncounterId = encounter.Id,
-                Health = new() { { (BossPart.Front, 1).ConvertToString(), 6 }, { (BossPart.Back, 1).ConvertToString(), 6 }, { (BossPart.LeftFlank, 1).ConvertToString(), 6 }, { (BossPart.RightFlank, 1).ConvertToString(), 6 }, { (BossPart.Core, 1).ConvertToString(), 6 } },
-                Defence = 2,
-                XPosition = 0,
-                YPosition = 0,
-                Might = new Dictionary<Might, int>() { { Might.White, 0 }, { Might.Yellow, 3 }, { Might.Red, 2 }, { Might.Black, 0 } }
-            };
+            var boss = AbstractBoss.GetBossEntityByNumber(1);
             _bosses.Add(boss);
 
             return encounter.Id;

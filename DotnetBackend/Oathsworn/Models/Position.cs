@@ -10,7 +10,7 @@ namespace Oathsworn.Models
 
     public class BorderedPosition : Position
     {
-        Direction Direction { get; set; }
-        Corner Corner { get; set; }
+        public Direction? Direction { get; set; }
+        public Corner? Corner { get; set; }
     }
 }

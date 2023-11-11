@@ -14,8 +14,9 @@ namespace Oathsworn
     public enum BossPart
     {
         Front,
-        Back,
+        Rear,
         Core,
+        Flank,
         LeftFlank,
         RightFlank,
     }
@@ -79,7 +80,9 @@ namespace Oathsworn
     public enum BossActionType
     {
         Move,
-        Attack
+        Attack,
+        Special,
+        Custom
     }
 
     public enum EncounterState

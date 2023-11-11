@@ -61,6 +61,8 @@ namespace Oathsworn
         public DbSet<Attack> Attacks { get; set; }
         public DbSet<Boss> Bosses { get; set; }
         public DbSet<BossAction> BossActions { get; set; }
+        public DbSet<BossAttack> BossAttacks { get; set; }
+        public DbSet<BossAttackPlayer> BossAttackPlayers { get; set; }
         public DbSet<Encounter> Encounters { get; set; }
         public DbSet<EncounterMightDeck> EncounterMightDecks { get; set; }
         public DbSet<EncounterPlayer> EncounterPlayers { get; set; }
