@@ -75,7 +75,7 @@ export const AttackModal = observer(({ attackStore, closeModal }: AttackModalPro
                                     <img className="w-8 h-8" src={tokenIconMap[Token.Redraw]} alt={Token.Redraw.toString()} />: {attackStore.redrawTokensUsed}
                                 </div>
                                 <div className="mt-2 font-lg text-lg">
-                                    {attackStore.cardsDrawn.filter(x => x.value === 0).length >= 2 ? "Miss" : `${attackStore.cardsDrawn.filter(card => !card.isDrawnFromCritical).reduce((partialSum, card) => partialSum + card.value, 0)} damage`}
+                                    {attackStore.cardsDrawn.filter(card => !card.isDrawnFromCritical && card.value === 0).length >= 2 ? "Miss" : `${attackStore.cardsDrawn.reduce((partialSum, card) => partialSum + card.value, 0)} damage`}
                                 </div>
                                 <div className="grid grid-cols-6 gap-4 mt-3">
                                     {attackStore.cardsDrawn.filter(x => !x.isDrawnFromCritical).map((card, i) =>

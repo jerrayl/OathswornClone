@@ -5,7 +5,7 @@ namespace Oathsworn.Entities
     public class Attack : BaseEntity
     {
         public int PlayerId { get; set; }
-        public int BossId { get; set; }
+        public int? BossId { get; set; }
         public string BossPart { get; set; }
         public int BonusDamage { get; set; }
         public int EmpowerTokensUsed { get; set; }
