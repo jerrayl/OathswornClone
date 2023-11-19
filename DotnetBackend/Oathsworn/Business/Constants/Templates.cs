@@ -3,7 +3,7 @@ using System.Linq;
 using Oathsworn.Entities;
 using Oathsworn.Models;
 
-namespace Oathsworn.Business
+namespace Oathsworn.Business.Constants
 {
     public static class Templates
     {

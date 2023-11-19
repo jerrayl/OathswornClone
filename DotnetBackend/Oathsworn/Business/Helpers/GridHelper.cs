@@ -1,15 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Oathsworn.Business.Constants;
 using Oathsworn.Entities;
 using Oathsworn.Extensions;
 
-namespace Oathsworn.Business
+namespace Oathsworn.Business.Helpers
 {
     public static class GridHelper
     {
         public const int COORDINATE_MAX_VALUE = 8;
         public const int COORDINATE_MIN_VALUE = COORDINATE_MAX_VALUE * -1;
+        public const int MAX_DISTANCE = COORDINATE_MAX_VALUE * 2;
 
         public static int? GetDistanceAlongAxis(IPosition position1, IPosition position2)
         {
@@ -74,14 +76,31 @@ namespace Oathsworn.Business
         }
 
         // Overaching game rule preferences north and west to break ties, hence this direction is hardcoded 
-        public static IPosition GetNorthWestiest(List<IPosition> positions)
+        public static IPosition GetNorthWestiest(IEnumerable<IPosition> positions)
         {
+            if (positions.Count() == 0) {
+                throw new ArgumentException();
+            }
             var getNorthValue = (IPosition p) => p.XPosition + 2 * p.YPosition;
             return positions.Min(Comparer<IPosition>.Create((a, b) =>
             {
                 var northValueDifference = getNorthValue(a) - getNorthValue(b);
-                return northValueDifference == 0 ? a.XPosition- b.XPosition : northValueDifference;
-            }));
+                return northValueDifference == 0 ? a.XPosition - b.XPosition : northValueDifference;
+            }))!;
+        }
+
+        public static IPosition? GetNearest(IPosition position, IEnumerable<IPosition> targets, int startRange = 1, int endRange = MAX_DISTANCE)
+        {
+            foreach (var ringSize in Enumerable.Range(startRange, endRange))
+            {
+                var positions = GetTemplate(position, Template.Ring, ringSize);
+                var foundTargets = targets.Where(t => positions.Any(p => p.EqualTo(t)));
+                if (foundTargets.Any())
+                {
+                    return GetNorthWestiest(foundTargets);
+                }
+            }
+            return null;
         }
     }
 }

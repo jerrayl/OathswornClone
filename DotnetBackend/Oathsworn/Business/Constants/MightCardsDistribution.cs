@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Oathsworn.Models;
 
-namespace Oathsworn.Business
+namespace Oathsworn.Business.Constants
 {
     public static class MightCardsDistribution
     {

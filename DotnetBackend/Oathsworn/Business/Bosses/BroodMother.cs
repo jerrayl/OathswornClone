@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Oathsworn.Entities;
@@ -86,7 +87,7 @@ namespace Oathsworn.Business.Bosses
                 new CustomActionComponent { Type = BossActionType.Custom, ExtraEffect = "Turn to face directly away from her target"},
                 new AttackActionComponent{ Type = BossActionType.Attack, BossPart = BossPart.Rear, ExtraEffect = "Cone, Range 3, Knockback 2, this cone attack comes from her rear hex" }
             }},
-            new (){ Number = 12, Stage = 3, Name = "Screech", Components = new(){ 
+            new (){ Number = 12, Stage = 3, Name = "Screech", Components = new(){
                 new SpecialActionComponent { Type = BossActionType.Special },
                 new MoveActionComponent{ Type = BossActionType.Move, Spaces = 3, Direction = Direction.NorthEast },
                 new CustomActionComponent { Type = BossActionType.Custom, ExtraEffect = "This damages all Oathsworn and Allies on the board. For each target, draw might.white for each hex between them and the next closest target to them. Draw seperately for each target. For each card showing a 2, the target must either lose 2 combat tokens (if they have at least 2) or lose one health (their choice)"},
@@ -104,7 +105,7 @@ namespace Oathsworn.Business.Bosses
             new (){ Number = 15, Stage = 3, Name = "Retreat", Components = new(){
                 new SpecialActionComponent { Type = BossActionType.Special },
                 new CustomActionComponent { Type = BossActionType.Custom, ExtraEffect = "The broodmother gains 1 defence for the rest of the encounter"},
-                new AttackActionComponent{ Type = BossActionType.Attack, BossPart = BossPart.Rear, ExtraEffect = "This rargets all adjacent enemies. Draw once for all damage." },
+                new AttackActionComponent{ Type = BossActionType.Attack, BossPart = BossPart.Rear, ExtraEffect = "This targets all adjacent enemies. Draw once for all damage." },
                 new MoveActionComponent{ Type = BossActionType.Move, Spaces = 4, ExtraEffect = "Move to the nearest board edge. She will stop at any board edge reached during this move" },
              }},
         };
@@ -114,7 +115,7 @@ namespace Oathsworn.Business.Bosses
             return new Boss()
             {
                 Number = 1,
-                Health = MAPPINGS.ToDictionary(x => x.BossPart.ConvertToString(), x => Constants.MAXIMUM_HEALTH),
+                Health = MAPPINGS.Select(x => x.BossPart.ConvertToString()).Distinct().ToDictionary(x => x, x => GlobalConstants.MAXIMUM_HEALTH),
                 Defence = 2,
                 XPosition = 0,
                 YPosition = -2,
@@ -123,31 +124,53 @@ namespace Oathsworn.Business.Bosses
             };
         }
 
-        public BroodMother(Boss bossEntity) : base(bossEntity)
+        public BroodMother(Boss bossEntity, IBossDependencies bossDependencies) : base(bossEntity, bossDependencies)
         {
         }
 
         protected override List<BossMapping> Mappings => MAPPINGS;
+        protected override Size Size => Size.Large;
 
-        public override int GetStage()
+        protected override int GetStage()
         {
             var healthLost = BossEntity.Health.Values.Where(x => x <= 0).Count();
             return healthLost >= 4 ? 3 : healthLost >= 2 ? 2 : 1;
         }
 
-        public override string GetActionText(int number)
+        protected override int GetDefaultTarget()
         {
-            throw new System.NotImplementedException();
+            return GetNearestPlayer();
         }
 
-        public override void PerformAction(int number)
+        protected override Action GetAction(int number)
         {
-            throw new System.NotImplementedException();
+            return ACTIONS[number];
         }
 
-        public override (int, int) GetDefaultTarget()
+        protected override string GetActionText(int number)
         {
-            throw new System.NotImplementedException();
+            var action = ACTIONS.Find(x => x.Number == number) ?? throw new Exception("Invalid action number");
+            return $"{action.Name} {action.Number}";
+        }
+
+        protected override void PerformSpecialAction(SpecialActionComponent actionComponent)
+        {
+            //do nothing for now
+        }
+
+        protected override void PerformCustomAction(CustomActionComponent number)
+        {
+            //do nothing for now
+        }
+
+        protected override void PerformStartOfRoundActions()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void PerformEndOfRoundActions()
+        {
+            throw new NotImplementedException();
         }
     }
 }

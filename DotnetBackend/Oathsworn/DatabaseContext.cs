@@ -12,11 +12,13 @@ namespace Oathsworn
         {
         }
 
-        private string Serialize<T>(T x) {
+        private string Serialize<T>(T x)
+        {
             return JsonSerializer.Serialize(x, (JsonSerializerOptions)null);
         }
 
-        private Dictionary<T, int> Deserialize<T>(string x) {
+        private Dictionary<T, int> Deserialize<T>(string x)
+        {
             return JsonSerializer.Deserialize<Dictionary<T, int>>(x, (JsonSerializerOptions)null);
         }
 
@@ -31,17 +33,17 @@ namespace Oathsworn
                 .Entity<Boss>()
                 .Property(e => e.Health)
                 .HasConversion(x => Serialize(x), x => Deserialize<string>(x));
-            
+
             modelBuilder
                 .Entity<Boss>()
                 .Property(e => e.Might)
                 .HasConversion(x => Serialize(x), x => Deserialize<Might>(x));
-            
+
             modelBuilder
                 .Entity<Minion>()
                 .Property(e => e.Might)
                 .HasConversion(x => Serialize(x), x => Deserialize<Might>(x));
-            
+
             modelBuilder
                 .Entity<EncounterPlayer>()
                 .Property(e => e.Tokens)
@@ -51,7 +53,7 @@ namespace Oathsworn
                 .Entity<Player>()
                 .Property(e => e.Might)
                 .HasConversion(x => Serialize(x), x => Deserialize<Might>(x));
-            
+
             modelBuilder
                 .Entity<Item>()
                 .Property(e => e.Might)

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Oathsworn.Entities
 {
@@ -12,7 +14,11 @@ namespace Oathsworn.Entities
         public int YPosition { get; set; }
         public Dictionary<Might, int> Might { get; set; }
         public Direction Direction { get; set; }
+        public int? TargetId { get; set; }
+        public int? ActionComponentIndex { get; set; }
+        public string CustomData { get; set; } = String.Empty;
 
+        public virtual EncounterPlayer Target { get; set; }
         public virtual Encounter Encounter { get; set; }
         public virtual List<BossAction> BossActions { get; set; }
     }

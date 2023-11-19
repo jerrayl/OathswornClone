@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Oathsworn.Entities;
 
-namespace Oathsworn.Business
+namespace Oathsworn.Business.Constants
 {
     public static class DefaultPlayers
     {

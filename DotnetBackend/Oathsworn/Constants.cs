@@ -77,6 +77,12 @@ namespace Oathsworn
         West
     }
 
+    public enum Size
+    {
+        Small,
+        Large
+    }
+
     public enum BossActionType
     {
         Move,
@@ -85,16 +91,14 @@ namespace Oathsworn
         Custom
     }
 
-    public enum EncounterState
+    public enum CharacterType
     {
-        InProgress,
-        PlayerStartingAction,
-        PlayerPerformingAction,
-        BossStartingAction,
-        BossPerformingAction
+        Player,
+        Boss,
+        Minion
     }
 
-    public class Constants
+    public class GlobalConstants
     {
         // Game constants
         public const int MAXIMUM_HEALTH = 6;
