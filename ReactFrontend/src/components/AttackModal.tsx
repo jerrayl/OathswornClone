@@ -1,4 +1,3 @@
-import React from "react";
 import { observer } from "mobx-react";
 import chevronUp from "../assets/icons/chevron-up.svg";
 import chevronDown from "../assets/icons/chevron-down.svg";

@@ -41,12 +41,17 @@ namespace Oathsworn.Business.Services
         public async Task UpdateGameState(int encounterId)
         {
             var players = _encounterPlayers.Read(x => x.EncounterId == encounterId, x => x.Player);
-            var boss = _bosses.ReadOne(x => x.EncounterId == encounterId);
+            var bossEntity = _bosses.ReadOne(x => x.EncounterId == encounterId);
+            var boss = _bossFactory.GetBossInstance(bossEntity);
+            var bossModel = _mapper.Map<Boss, BossModel>(bossEntity);
+            bossModel.Name = boss.Name;
+            bossModel.NextAction = boss.GetNextActionText();
+            bossModel.Positions = boss.GetBossPositions();
 
             var model = new GameStateModel()
             {
                 Players = players.Select(x => _mapper.Map<EncounterPlayer, PlayerModel>(x)).ToList(),
-                Boss = _mapper.Map<Boss, BossModel>(boss)
+                Boss = bossModel
             };
 
             await _hubContext.Clients.Group(encounterId.ToString()).SendAsync("GameState", model);

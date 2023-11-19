@@ -10,13 +10,13 @@ namespace Oathsworn.Business.Bosses
     {
         private static readonly List<BossMapping> MAPPINGS = new()
         {
-            new (){RelativeXPosition = 0, RelativeYPosition = -1, Direction = Direction.North, BossPart = (BossPart.Front, 1), Break = BossPart.Front},
-            new (){RelativeXPosition = 1, RelativeYPosition = -1, Direction = Direction.NorthEast, BossPart = (BossPart.RightFlank, 1)},
-            new (){RelativeXPosition = 1, RelativeYPosition = 0, Direction = Direction.SouthEast, BossPart = (BossPart.RightFlank, 1)},
-            new (){RelativeXPosition = 0, RelativeYPosition = 1, Direction = Direction.South, BossPart = (BossPart.Rear, 1), Break = BossPart.Rear },
-            new (){RelativeXPosition = -1, RelativeYPosition = 1, Direction = Direction.SouthWest, BossPart = (BossPart.LeftFlank, 1), Break = BossPart.Flank },
-            new (){RelativeXPosition = -1, RelativeYPosition = 0, Direction = Direction.NorthWest, BossPart = (BossPart.LeftFlank, 1), Break = BossPart.Flank },
-            new (){RelativeXPosition = 0, RelativeYPosition = 0, BossPart = (BossPart.Core, 1), Break = BossPart.Core }
+            new (){RelativeXPosition = 0, RelativeYPosition = -1, Direction = Direction.North, BossPart = (BossPart.Front, 0), Break = BossPart.Front},
+            new (){RelativeXPosition = 1, RelativeYPosition = -1, Direction = Direction.NorthEast, BossPart = (BossPart.RightFlank, 0)},
+            new (){RelativeXPosition = 1, RelativeYPosition = 0, Direction = Direction.SouthEast, BossPart = (BossPart.RightFlank, 0)},
+            new (){RelativeXPosition = 0, RelativeYPosition = 1, Direction = Direction.South, BossPart = (BossPart.Rear, 0), Break = BossPart.Rear },
+            new (){RelativeXPosition = -1, RelativeYPosition = 1, Direction = Direction.SouthWest, BossPart = (BossPart.LeftFlank, 0), Break = BossPart.Flank },
+            new (){RelativeXPosition = -1, RelativeYPosition = 0, Direction = Direction.NorthWest, BossPart = (BossPart.LeftFlank, 0), Break = BossPart.Flank },
+            new (){RelativeXPosition = 0, RelativeYPosition = 0, BossPart = (BossPart.Core, 0), Break = BossPart.Core }
         };
 
         private static readonly List<Action> ACTIONS = new()
@@ -130,6 +130,7 @@ namespace Oathsworn.Business.Bosses
 
         protected override List<BossMapping> Mappings => MAPPINGS;
         protected override Size Size => Size.Large;
+        public override string Name => "Brood Mother";
 
         protected override int GetStage()
         {
@@ -147,10 +148,29 @@ namespace Oathsworn.Business.Bosses
             return ACTIONS[number];
         }
 
-        protected override string GetActionText(int number)
+        protected override List<string> GetActionText(int number)
         {
             var action = ACTIONS.Find(x => x.Number == number) ?? throw new Exception("Invalid action number");
-            return $"{action.Name} {action.Number}";
+            var actionList = new List<string>() { $"{action.Name} (Stage {action.Stage})" };
+            foreach (var component in action.Components)
+            {
+                switch (component.Type)
+                {
+                    case BossActionType.Move:
+                        var moveComponent = (MoveActionComponent)component;
+                        actionList.Add($"Move {moveComponent.Spaces} {(moveComponent.Direction is null ? "to target" : moveComponent.Direction)}");
+                        break;
+                    case BossActionType.Attack:
+                        var attackComponent = (AttackActionComponent)component;
+                        actionList.Add($"Attack {attackComponent.Range.ToEmptyIfZero("Range ", " ")}{attackComponent.Template.ToEmptyIfNull(null, " ")}{attackComponent.Size.ToEmptyIfZero(null, " ")} {attackComponent.BossPart.ToEmptyIfNull("with ", string.Empty)}");
+                        break;
+                    case BossActionType.Special:
+                        break;
+                    case BossActionType.Custom:
+                        break;
+                }
+            }
+            return actionList;
         }
 
         protected override void PerformSpecialAction(SpecialActionComponent actionComponent)

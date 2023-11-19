@@ -181,3 +181,8 @@ export const BOARD_MAPPING: { [key: number]: Position } = {
     143: { xPosition: 8, yPosition: -1 },
     161: { xPosition: 8, yPosition: 0 }
 }
+
+export const formatBossPart = (bossPart: string) => {
+    const bossPartSplit = bossPart.split(" ");
+    return bossPartSplit[1] === "1" ? bossPartSplit[0] : bossPart; 
+}

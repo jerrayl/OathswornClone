@@ -1,0 +1,43 @@
+import { observer } from "mobx-react";
+import { BossModel } from "../utils/apiModels";
+import { MightDisplay } from "./shared/MightDisplay";
+import { HealthDice } from "./shared/HealthDice";
+import { DefenceDisplay } from "./shared/DefenceDisplay";
+import { formatBossPart } from "../utils/constants";
+
+export interface BossSummaryProps {
+  boss: BossModel;
+}
+
+export const BossSummary = observer(({ boss }: BossSummaryProps) => {
+  return (
+    <div className={"rounded-lg overflow-hidden shadow-xl text-center px-2 py-2 caret-transparent bg-zinc-400"}>
+      <div className="justify-center text-xl font-bold mb-2">
+        {boss.name}
+      </div>
+      <div className="flex flex-col gap-2 justify-center items-center">
+        {Object.keys(boss.health).map(bossPart =>
+          <div className="flex items-center">
+            <h2 className="font-semibold mr-2">{formatBossPart(bossPart)}</h2>
+            <HealthDice health={boss.health[bossPart]} className="w-10 h-10" />
+          </div>
+        )}
+      </div>
+      <div className="flex items-center justify-evenly">
+        <DefenceDisplay defence={boss.defence} className="w-10 h-10" />
+        <MightDisplay might={boss.might} length={5} className="flex justify-center gap-2" />
+      </div>
+      <div className="justify-center text-xl font-semibold">
+        Next Action
+      </div>
+      <div className="flex flex-col gap-2 justify-center items-center">
+        {boss.nextAction.map(actionComponent =>
+          <div className="flex items-center">
+            <h2 className="font-semibold">{actionComponent}</h2>
+          </div>
+        )}
+      </div>
+
+    </div >
+  );
+});

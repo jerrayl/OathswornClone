@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Oathsworn.Business.Services;
-using Oathsworn.Models;
 
 namespace Oathsworn.SignalR
 {

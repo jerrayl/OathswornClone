@@ -68,6 +68,7 @@ namespace Oathsworn.Business.Bosses
         protected IBossDependencies BossDependencies { get; init; }
         protected Boss BossEntity { get; init; }
         protected abstract List<BossMapping> Mappings { get; }
+        public abstract string Name { get; }
         protected abstract Size Size { get; }
 
         public List<BorderedPosition> GetBossPositions()
@@ -85,12 +86,12 @@ namespace Oathsworn.Business.Bosses
             ).Single().BossPart;
         }
 
-        public bool IsBroken(BossPart bossPart)
+        private bool IsBroken(BossPart bossPart)
         {
             return Mappings.Where(m => m.Break == bossPart).Any(m => BossEntity.Health[m.BossPart.ConvertToString()] <= 0);
         }
 
-        public Dictionary<Might, int> GetMight(BossPart bossPart)
+        private Dictionary<Might, int> GetMight(BossPart bossPart)
         {
             if (!IsBroken(bossPart))
             {
@@ -173,7 +174,7 @@ namespace Oathsworn.Business.Bosses
             BossDependencies.BossActions.Delete(GetNextAction());
         }
 
-        public void PerformActionComponent(ActionComponent actionComponent)
+        private void PerformActionComponent(ActionComponent actionComponent)
         {
             switch (actionComponent.Type)
             {
@@ -192,7 +193,7 @@ namespace Oathsworn.Business.Bosses
             }
         }
 
-        public void PerformMove(MoveActionComponent actionComponent)
+        private void PerformMove(MoveActionComponent actionComponent)
         {
             //if target exists, move towards target, stopping at target
             //if no target, move to direction, stopping at edge of board 
@@ -200,7 +201,7 @@ namespace Oathsworn.Business.Bosses
             // Displace Players
         }
 
-        public void PerformAttack(AttackActionComponent actionComponent)
+        private void PerformAttack(AttackActionComponent actionComponent)
         {
             // Assume single target
             var targets = new List<int> { BossEntity.TargetId.Value };
@@ -257,7 +258,7 @@ namespace Oathsworn.Business.Bosses
             return BossDependencies.BossActions.Read(x => x.BossId == BossEntity.Id).OrderBy(x => x.Id).First();
         }
 
-        public string GetNextActionText()
+        public List<string> GetNextActionText()
         {
             return GetActionText(GetNextAction().Number);
         }
@@ -265,7 +266,7 @@ namespace Oathsworn.Business.Bosses
         protected abstract int GetStage();
         protected abstract int GetDefaultTarget();
         protected abstract Action GetAction(int number);
-        protected abstract string GetActionText(int number);
+        protected abstract List<string> GetActionText(int number);
         protected abstract void PerformSpecialAction(SpecialActionComponent actionComponent);
         protected abstract void PerformCustomAction(CustomActionComponent actionComponent);
         protected abstract void PerformStartOfRoundActions();

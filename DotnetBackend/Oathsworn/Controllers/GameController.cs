@@ -159,14 +159,23 @@ namespace Oathsworn.Controllers
             }
         }
 
-        // Dummy method to get GameStateModel into NSwag
         [HttpPost]
-        [Route("gamestate")]
-        [ProducesResponseType(StatusCodes.Status418ImATeapot)]
+        [Route("end-turn")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ApiExplorerSettings(GroupName = "Game")]
-        public IActionResult GameState([FromBody] GameStateModel model)
+        public async Task<IActionResult> EndTurn([FromQuery] int encounterId)
         {
-            return new StatusCodeResult(418);
+            try
+            {
+                await _game.EndTurn(encounterId);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

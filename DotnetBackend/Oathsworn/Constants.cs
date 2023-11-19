@@ -57,6 +57,7 @@ namespace Oathsworn
         Wave
     }
 
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Direction
     {
         NorthWest,
@@ -66,7 +67,8 @@ namespace Oathsworn
         South,
         SouthWest
     }
-
+    
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Corner
     {
         NorthWest,

@@ -18,6 +18,7 @@ export class GameStore {
 
     newConnection.on('GameState', message => {
       this.gameState = message;
+      console.log(message);
     });
     this.connection = newConnection;
     this.startConnection();
