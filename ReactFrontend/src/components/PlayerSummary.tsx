@@ -2,12 +2,11 @@ import React from "react";
 import { observer } from "mobx-react";
 import { classIconMap } from "../assets/icons/ClassIcons";
 import { tokenIconMap } from "../assets/icons/TokenIcons";
-import { Player } from "../utils/types";
-import { Token } from "../utils/apiModels";
+import { PlayerModel, Token } from "../utils/apiModels";
 import { COLORS } from "../utils/constants";
 
 export interface PlayerSummaryProps {
-  player: Player;
+  player: PlayerModel;
   isSelected: boolean;
 }
 

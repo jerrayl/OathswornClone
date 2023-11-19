@@ -30,6 +30,7 @@ namespace Oathsworn.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("BossPart")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("EmpowerTokensUsed")
@@ -77,6 +78,13 @@ namespace Oathsworn.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("ActionComponentIndex")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CustomData")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("Defence")
                         .HasColumnType("INTEGER");
 
@@ -87,12 +95,17 @@ namespace Oathsworn.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Health")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Might")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Number")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("TargetId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("XPosition")
@@ -105,6 +118,8 @@ namespace Oathsworn.Migrations
 
                     b.HasIndex("EncounterId")
                         .IsUnique();
+
+                    b.HasIndex("TargetId");
 
                     b.ToTable("Bosses");
                 });
@@ -131,13 +146,50 @@ namespace Oathsworn.Migrations
                     b.ToTable("BossActions");
                 });
 
+            modelBuilder.Entity("Oathsworn.Entities.BossAttack", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("BossId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BossId");
+
+                    b.ToTable("BossAttacks");
+                });
+
+            modelBuilder.Entity("Oathsworn.Entities.BossAttackPlayer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("BossAttackId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BossAttackId");
+
+                    b.HasIndex("PlayerId");
+
+                    b.ToTable("BossAttackPlayers");
+                });
+
             modelBuilder.Entity("Oathsworn.Entities.Encounter", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("State")
+                    b.Property<int?>("CharacterPerformingAction")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -183,6 +235,7 @@ namespace Oathsworn.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Tokens")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("XPosition")
@@ -208,6 +261,7 @@ namespace Oathsworn.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -228,12 +282,15 @@ namespace Oathsworn.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Effects")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Might")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Type")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -250,19 +307,16 @@ namespace Oathsworn.Migrations
                     b.Property<int?>("AttackId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("DeckId")
+                    b.Property<int?>("BossAttackId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("EncounterMightDeckId")
+                    b.Property<int>("DeckId")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsCritical")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsDrawnFromCritical")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("PlayerId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Type")
@@ -275,9 +329,9 @@ namespace Oathsworn.Migrations
 
                     b.HasIndex("AttackId");
 
-                    b.HasIndex("EncounterMightDeckId");
+                    b.HasIndex("BossAttackId");
 
-                    b.HasIndex("PlayerId");
+                    b.HasIndex("DeckId");
 
                     b.ToTable("MightCards");
                 });
@@ -298,6 +352,7 @@ namespace Oathsworn.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Might")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("XPosition")
@@ -322,6 +377,9 @@ namespace Oathsworn.Migrations
                     b.Property<int>("AnimusRegen")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("BossAttackId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("Class")
                         .HasColumnType("INTEGER");
 
@@ -338,9 +396,12 @@ namespace Oathsworn.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Might")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BossAttackId");
 
                     b.HasIndex("FreeCompanyId");
 
@@ -412,7 +473,7 @@ namespace Oathsworn.Migrations
 
             modelBuilder.Entity("Oathsworn.Entities.AttackMinion", b =>
                 {
-                    b.HasOne("Oathsworn.Entities.Attack", null)
+                    b.HasOne("Oathsworn.Entities.Attack", "Attack")
                         .WithMany("AttackMinions")
                         .HasForeignKey("AttackId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -423,6 +484,8 @@ namespace Oathsworn.Migrations
                         .HasForeignKey("MinionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Attack");
 
                     b.Navigation("Minion");
                 });
@@ -435,7 +498,13 @@ namespace Oathsworn.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Oathsworn.Entities.EncounterPlayer", "Target")
+                        .WithMany()
+                        .HasForeignKey("TargetId");
+
                     b.Navigation("Encounter");
+
+                    b.Navigation("Target");
                 });
 
             modelBuilder.Entity("Oathsworn.Entities.BossAction", b =>
@@ -447,6 +516,36 @@ namespace Oathsworn.Migrations
                         .IsRequired();
 
                     b.Navigation("Boss");
+                });
+
+            modelBuilder.Entity("Oathsworn.Entities.BossAttack", b =>
+                {
+                    b.HasOne("Oathsworn.Entities.Boss", "Boss")
+                        .WithMany()
+                        .HasForeignKey("BossId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Boss");
+                });
+
+            modelBuilder.Entity("Oathsworn.Entities.BossAttackPlayer", b =>
+                {
+                    b.HasOne("Oathsworn.Entities.BossAttack", "BossAttack")
+                        .WithMany()
+                        .HasForeignKey("BossAttackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Oathsworn.Entities.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BossAttack");
+
+                    b.Navigation("Player");
                 });
 
             modelBuilder.Entity("Oathsworn.Entities.EncounterMightDeck", b =>
@@ -485,15 +584,17 @@ namespace Oathsworn.Migrations
                         .WithMany("MightCards")
                         .HasForeignKey("AttackId");
 
-                    b.HasOne("Oathsworn.Entities.EncounterMightDeck", "EncounterMightDeck")
+                    b.HasOne("Oathsworn.Entities.BossAttack", null)
                         .WithMany("MightCards")
-                        .HasForeignKey("EncounterMightDeckId");
+                        .HasForeignKey("BossAttackId");
 
-                    b.HasOne("Oathsworn.Entities.Player", null)
+                    b.HasOne("Oathsworn.Entities.EncounterMightDeck", "Deck")
                         .WithMany("MightCards")
-                        .HasForeignKey("PlayerId");
+                        .HasForeignKey("DeckId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("EncounterMightDeck");
+                    b.Navigation("Deck");
                 });
 
             modelBuilder.Entity("Oathsworn.Entities.Minion", b =>
@@ -509,6 +610,10 @@ namespace Oathsworn.Migrations
 
             modelBuilder.Entity("Oathsworn.Entities.Player", b =>
                 {
+                    b.HasOne("Oathsworn.Entities.BossAttack", null)
+                        .WithMany("Players")
+                        .HasForeignKey("BossAttackId");
+
                     b.HasOne("Oathsworn.Entities.FreeCompany", "FreeCompany")
                         .WithMany()
                         .HasForeignKey("FreeCompanyId")
@@ -556,9 +661,17 @@ namespace Oathsworn.Migrations
                     b.Navigation("BossActions");
                 });
 
+            modelBuilder.Entity("Oathsworn.Entities.BossAttack", b =>
+                {
+                    b.Navigation("MightCards");
+
+                    b.Navigation("Players");
+                });
+
             modelBuilder.Entity("Oathsworn.Entities.Encounter", b =>
                 {
-                    b.Navigation("Boss");
+                    b.Navigation("Boss")
+                        .IsRequired();
 
                     b.Navigation("EncounterMightDecks");
 
@@ -576,9 +689,8 @@ namespace Oathsworn.Migrations
                 {
                     b.Navigation("Attacks");
 
-                    b.Navigation("EncounterPlayer");
-
-                    b.Navigation("MightCards");
+                    b.Navigation("EncounterPlayer")
+                        .IsRequired();
 
                     b.Navigation("PlayerAbilities");
 

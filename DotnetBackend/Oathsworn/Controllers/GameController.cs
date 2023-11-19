@@ -4,6 +4,7 @@ using Oathsworn.Business;
 using Oathsworn.Models;
 using System.Linq;
 using System;
+using System.Threading.Tasks;
 
 namespace Oathsworn.Controllers
 {
@@ -16,7 +17,7 @@ namespace Oathsworn.Controllers
             _game = game;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("start-encounter")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -24,16 +25,6 @@ namespace Oathsworn.Controllers
         public IActionResult StartEncounter()
         {
             return Ok(_game.StartEncounter());
-        }
-
-        [HttpGet]
-        [Route("get-gamestate")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ApiExplorerSettings(GroupName = "Game")]
-        public IActionResult GetGameState([FromQuery] int encounterId)
-        {
-            return Ok(_game.GetGameState(encounterId));
         }
 
         [HttpPost]
@@ -65,7 +56,7 @@ namespace Oathsworn.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ApiExplorerSettings(GroupName = "Game")]
-        public IActionResult Move([FromQuery] int encounterId, [FromBody] MoveModel model)
+        public async Task<IActionResult> Move([FromQuery] int encounterId, [FromBody] MoveModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -73,7 +64,8 @@ namespace Oathsworn.Controllers
             }
             try
             {
-                return Ok(_game.Move(encounterId, model));
+                await _game.Move(encounterId, model);
+                return Ok();
             }
             catch (Exception e)
             {
@@ -87,7 +79,7 @@ namespace Oathsworn.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ApiExplorerSettings(GroupName = "Game")]
-        public IActionResult SpendToken([FromQuery] int encounterId, [FromBody] SpendTokenModel model)
+        public async Task<IActionResult> SpendToken([FromQuery] int encounterId, [FromBody] SpendTokenModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -95,7 +87,7 @@ namespace Oathsworn.Controllers
             }
             try
             {
-                _game.SpendToken(encounterId, model);
+                await _game.SpendToken(encounterId, model);
                 return Ok();
             }
             catch (Exception e)
@@ -154,16 +146,27 @@ namespace Oathsworn.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ApiExplorerSettings(GroupName = "Game")]
-        public IActionResult CompleteAttack([FromQuery] int encounterId, [FromQuery] int attackId)
+        public async Task<IActionResult> CompleteAttack([FromQuery] int encounterId, [FromQuery] int attackId)
         {
             try
             {
-                return Ok(_game.CompleteAttack(encounterId, attackId));
+                await _game.CompleteAttack(encounterId, attackId);
+                return Ok();
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        // Dummy method to get GameStateModel into NSwag
+        [HttpPost]
+        [Route("gamestate")]
+        [ProducesResponseType(StatusCodes.Status418ImATeapot)]
+        [ApiExplorerSettings(GroupName = "Game")]
+        public IActionResult GameState([FromBody] GameStateModel model)
+        {
+            return new StatusCodeResult(418);
         }
     }
 }

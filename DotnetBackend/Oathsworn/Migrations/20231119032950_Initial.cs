@@ -16,7 +16,7 @@ namespace Oathsworn.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    State = table.Column<int>(type: "INTEGER", nullable: false)
+                    CharacterPerformingAction = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -29,7 +29,7 @@ namespace Oathsworn.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true)
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -42,41 +42,15 @@ namespace Oathsworn.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Type = table.Column<string>(type: "TEXT", nullable: true),
+                    Type = table.Column<string>(type: "TEXT", nullable: false),
                     Defence = table.Column<int>(type: "INTEGER", nullable: false),
-                    Might = table.Column<string>(type: "TEXT", nullable: true),
+                    Might = table.Column<string>(type: "TEXT", nullable: false),
                     Battleflow = table.Column<int>(type: "INTEGER", nullable: false),
-                    Effects = table.Column<string>(type: "TEXT", nullable: true)
+                    Effects = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Items", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Bosses",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    EncounterId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Number = table.Column<int>(type: "INTEGER", nullable: false),
-                    Health = table.Column<string>(type: "TEXT", nullable: true),
-                    Defence = table.Column<int>(type: "INTEGER", nullable: false),
-                    XPosition = table.Column<int>(type: "INTEGER", nullable: false),
-                    YPosition = table.Column<int>(type: "INTEGER", nullable: false),
-                    Might = table.Column<string>(type: "TEXT", nullable: true),
-                    Direction = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Bosses", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Bosses_Encounters_EncounterId",
-                        column: x => x.EncounterId,
-                        principalTable: "Encounters",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -110,7 +84,7 @@ namespace Oathsworn.Migrations
                     Defence = table.Column<int>(type: "INTEGER", nullable: false),
                     XPosition = table.Column<int>(type: "INTEGER", nullable: false),
                     YPosition = table.Column<int>(type: "INTEGER", nullable: false),
-                    Might = table.Column<string>(type: "TEXT", nullable: true)
+                    Might = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -119,6 +93,121 @@ namespace Oathsworn.Migrations
                         name: "FK_Minons_Encounters_EncounterId",
                         column: x => x.EncounterId,
                         principalTable: "Encounters",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AttackMinion",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    AttackId = table.Column<int>(type: "INTEGER", nullable: false),
+                    MinionId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AttackMinion", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AttackMinion_Minons_MinionId",
+                        column: x => x.MinionId,
+                        principalTable: "Minons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Attacks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    PlayerId = table.Column<int>(type: "INTEGER", nullable: false),
+                    BossId = table.Column<int>(type: "INTEGER", nullable: true),
+                    BossPart = table.Column<string>(type: "TEXT", nullable: false),
+                    BonusDamage = table.Column<int>(type: "INTEGER", nullable: false),
+                    EmpowerTokensUsed = table.Column<int>(type: "INTEGER", nullable: false),
+                    RerollTokensUsed = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Attacks", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BossActions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    BossId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Stage = table.Column<int>(type: "INTEGER", nullable: false),
+                    Number = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BossActions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BossAttackPlayers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    BossAttackId = table.Column<int>(type: "INTEGER", nullable: false),
+                    PlayerId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BossAttackPlayers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BossAttacks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    BossId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BossAttacks", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MightCards",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    DeckId = table.Column<int>(type: "INTEGER", nullable: false),
+                    AttackId = table.Column<int>(type: "INTEGER", nullable: true),
+                    BossAttackId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Value = table.Column<int>(type: "INTEGER", nullable: false),
+                    Type = table.Column<int>(type: "INTEGER", nullable: false),
+                    IsCritical = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsDrawnFromCritical = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MightCards", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MightCards_Attacks_AttackId",
+                        column: x => x.AttackId,
+                        principalTable: "Attacks",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_MightCards_BossAttacks_BossAttackId",
+                        column: x => x.BossAttackId,
+                        principalTable: "BossAttacks",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_MightCards_EncounterMightDecks_DeckId",
+                        column: x => x.DeckId,
+                        principalTable: "EncounterMightDecks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -135,65 +224,21 @@ namespace Oathsworn.Migrations
                     Defence = table.Column<int>(type: "INTEGER", nullable: false),
                     MaxAnimus = table.Column<int>(type: "INTEGER", nullable: false),
                     AnimusRegen = table.Column<int>(type: "INTEGER", nullable: false),
-                    Might = table.Column<string>(type: "TEXT", nullable: true)
+                    Might = table.Column<string>(type: "TEXT", nullable: false),
+                    BossAttackId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Players", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Players_BossAttacks_BossAttackId",
+                        column: x => x.BossAttackId,
+                        principalTable: "BossAttacks",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_Players_FreeCompanies_FreeCompanyId",
                         column: x => x.FreeCompanyId,
                         principalTable: "FreeCompanies",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BossActions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    BossId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Stage = table.Column<int>(type: "INTEGER", nullable: false),
-                    Number = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BossActions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_BossActions_Bosses_BossId",
-                        column: x => x.BossId,
-                        principalTable: "Bosses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Attacks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    PlayerId = table.Column<int>(type: "INTEGER", nullable: false),
-                    BossId = table.Column<int>(type: "INTEGER", nullable: true),
-                    BossPart = table.Column<string>(type: "TEXT", nullable: true),
-                    BonusDamage = table.Column<int>(type: "INTEGER", nullable: false),
-                    EmpowerTokensUsed = table.Column<int>(type: "INTEGER", nullable: false),
-                    RerollTokensUsed = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Attacks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Attacks_Bosses_BossId",
-                        column: x => x.BossId,
-                        principalTable: "Bosses",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Attacks_Players_PlayerId",
-                        column: x => x.PlayerId,
-                        principalTable: "Players",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -210,7 +255,7 @@ namespace Oathsworn.Migrations
                     YPosition = table.Column<int>(type: "INTEGER", nullable: false),
                     CurrentHealth = table.Column<int>(type: "INTEGER", nullable: false),
                     CurrentAnimus = table.Column<int>(type: "INTEGER", nullable: false),
-                    Tokens = table.Column<string>(type: "TEXT", nullable: true)
+                    Tokens = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -278,64 +323,37 @@ namespace Oathsworn.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AttackMinion",
+                name: "Bosses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    AttackId = table.Column<int>(type: "INTEGER", nullable: false),
-                    MinionId = table.Column<int>(type: "INTEGER", nullable: false)
+                    EncounterId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Number = table.Column<int>(type: "INTEGER", nullable: false),
+                    Health = table.Column<string>(type: "TEXT", nullable: false),
+                    Defence = table.Column<int>(type: "INTEGER", nullable: false),
+                    XPosition = table.Column<int>(type: "INTEGER", nullable: false),
+                    YPosition = table.Column<int>(type: "INTEGER", nullable: false),
+                    Might = table.Column<string>(type: "TEXT", nullable: false),
+                    Direction = table.Column<int>(type: "INTEGER", nullable: false),
+                    TargetId = table.Column<int>(type: "INTEGER", nullable: true),
+                    ActionComponentIndex = table.Column<int>(type: "INTEGER", nullable: true),
+                    CustomData = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AttackMinion", x => x.Id);
+                    table.PrimaryKey("PK_Bosses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AttackMinion_Attacks_AttackId",
-                        column: x => x.AttackId,
-                        principalTable: "Attacks",
+                        name: "FK_Bosses_EncounterPlayers_TargetId",
+                        column: x => x.TargetId,
+                        principalTable: "EncounterPlayers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Bosses_Encounters_EncounterId",
+                        column: x => x.EncounterId,
+                        principalTable: "Encounters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AttackMinion_Minons_MinionId",
-                        column: x => x.MinionId,
-                        principalTable: "Minons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MightCards",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    DeckId = table.Column<int>(type: "INTEGER", nullable: false),
-                    AttackId = table.Column<int>(type: "INTEGER", nullable: true),
-                    Value = table.Column<int>(type: "INTEGER", nullable: false),
-                    Type = table.Column<int>(type: "INTEGER", nullable: false),
-                    IsCritical = table.Column<bool>(type: "INTEGER", nullable: false),
-                    IsDrawnFromCritical = table.Column<bool>(type: "INTEGER", nullable: false),
-                    EncounterMightDeckId = table.Column<int>(type: "INTEGER", nullable: true),
-                    PlayerId = table.Column<int>(type: "INTEGER", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MightCards", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_MightCards_Attacks_AttackId",
-                        column: x => x.AttackId,
-                        principalTable: "Attacks",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_MightCards_EncounterMightDecks_EncounterMightDeckId",
-                        column: x => x.EncounterMightDeckId,
-                        principalTable: "EncounterMightDecks",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_MightCards_Players_PlayerId",
-                        column: x => x.PlayerId,
-                        principalTable: "Players",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -364,10 +382,30 @@ namespace Oathsworn.Migrations
                 column: "BossId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BossAttackPlayers_BossAttackId",
+                table: "BossAttackPlayers",
+                column: "BossAttackId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BossAttackPlayers_PlayerId",
+                table: "BossAttackPlayers",
+                column: "PlayerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BossAttacks_BossId",
+                table: "BossAttacks",
+                column: "BossId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Bosses_EncounterId",
                 table: "Bosses",
                 column: "EncounterId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bosses_TargetId",
+                table: "Bosses",
+                column: "TargetId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EncounterMightDecks_EncounterId",
@@ -391,14 +429,14 @@ namespace Oathsworn.Migrations
                 column: "AttackId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MightCards_EncounterMightDeckId",
+                name: "IX_MightCards_BossAttackId",
                 table: "MightCards",
-                column: "EncounterMightDeckId");
+                column: "BossAttackId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MightCards_PlayerId",
+                name: "IX_MightCards_DeckId",
                 table: "MightCards",
-                column: "PlayerId");
+                column: "DeckId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Minons_EncounterId",
@@ -421,14 +459,78 @@ namespace Oathsworn.Migrations
                 column: "PlayerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Players_BossAttackId",
+                table: "Players",
+                column: "BossAttackId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Players_FreeCompanyId",
                 table: "Players",
                 column: "FreeCompanyId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AttackMinion_Attacks_AttackId",
+                table: "AttackMinion",
+                column: "AttackId",
+                principalTable: "Attacks",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Attacks_Bosses_BossId",
+                table: "Attacks",
+                column: "BossId",
+                principalTable: "Bosses",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Attacks_Players_PlayerId",
+                table: "Attacks",
+                column: "PlayerId",
+                principalTable: "Players",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_BossActions_Bosses_BossId",
+                table: "BossActions",
+                column: "BossId",
+                principalTable: "Bosses",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_BossAttackPlayers_BossAttacks_BossAttackId",
+                table: "BossAttackPlayers",
+                column: "BossAttackId",
+                principalTable: "BossAttacks",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_BossAttackPlayers_Players_PlayerId",
+                table: "BossAttackPlayers",
+                column: "PlayerId",
+                principalTable: "Players",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_BossAttacks_Bosses_BossId",
+                table: "BossAttacks",
+                column: "BossId",
+                principalTable: "Bosses",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_BossAttacks_Bosses_BossId",
+                table: "BossAttacks");
+
             migrationBuilder.DropTable(
                 name: "AttackMinion");
 
@@ -436,7 +538,7 @@ namespace Oathsworn.Migrations
                 name: "BossActions");
 
             migrationBuilder.DropTable(
-                name: "EncounterPlayers");
+                name: "BossAttackPlayers");
 
             migrationBuilder.DropTable(
                 name: "MightCards");
@@ -463,10 +565,16 @@ namespace Oathsworn.Migrations
                 name: "Bosses");
 
             migrationBuilder.DropTable(
-                name: "Players");
+                name: "EncounterPlayers");
 
             migrationBuilder.DropTable(
                 name: "Encounters");
+
+            migrationBuilder.DropTable(
+                name: "Players");
+
+            migrationBuilder.DropTable(
+                name: "BossAttacks");
 
             migrationBuilder.DropTable(
                 name: "FreeCompanies");

@@ -23,7 +23,3 @@ export const completeAttack = async (attackId: number) => {
 export const move = async (model: MoveModel) => {
     return (await api.post(`move?encounterId=${1}`, model)).data;
 }
-
-export const getGameState = async () => {
-    return (await api.get(`get-gamestate?encounterId=${1}`)).data;
-}

@@ -1,15 +1,15 @@
 import { IObservableArray, makeAutoObservable, observable } from "mobx";
 import { completeAttack, rerollAttack, startAttack } from "../utils/api";
-import { Might } from "../utils/apiModels";
-import { MightCard, Player } from "../utils/types";
+import { Might, PlayerModel } from "../utils/apiModels";
+import { MightCard } from "../utils/types";
 
 export class AttackStore {
-  constructor(player: Player) {
+  constructor(player: PlayerModel) {
     makeAutoObservable(this);
     this.player = player;
   }
 
-  player: Player;
+  player: PlayerModel;
   enemyId = 1;
   attackId: number | null = null;
   isBossTargeted = true;

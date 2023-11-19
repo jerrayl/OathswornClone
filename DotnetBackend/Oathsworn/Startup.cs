@@ -8,6 +8,8 @@ using Oathsworn.Business;
 using Oathsworn.Repositories;
 using Oathsworn.AutoMapper;
 using Oathsworn.SignalR;
+using Oathsworn.Business.Services;
+using Oathsworn.Business.Bosses;
 
 namespace Oathsworn
 {
@@ -27,6 +29,10 @@ namespace Oathsworn
             services.AddDbContext<DatabaseContext>();
 
             services.AddScoped<IGame, Game>();
+            services.AddScoped<IMightCardsService, MightCardsService>();
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IBossFactory, BossFactory>();
+            services.AddScoped<IBossDependencies, BossDependencies>();
             services.AddScoped(typeof(IDatabaseRepository<>), typeof(DatabaseRepository<>));
 
             // Add Swagger
