@@ -9,8 +9,9 @@ namespace Oathsworn.Models
         public string Name { get; set; }
         public Dictionary<string, int> Health { get; set; }
         public int Defence { get; set; }
-        public List<BorderedPosition> Positions { get; set; }
+        public List<BossPartPosition> Positions { get; set; }
         public Dictionary<Might, int> Might { get; set; }
         public List<string> NextAction { get; set; }
+        public int? ActionComponentIndex { get; set; }
     }
 }

@@ -81,18 +81,11 @@ namespace Oathsworn
 
     public enum Size
     {
-        Small,
+        Normal,
         Large
     }
 
-    public enum BossActionType
-    {
-        Move,
-        Attack,
-        Special,
-        Custom
-    }
-
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum CharacterType
     {
         Player,

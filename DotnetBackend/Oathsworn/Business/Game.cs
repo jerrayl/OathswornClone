@@ -10,9 +10,7 @@ using Oathsworn.Business.Bosses;
 using Oathsworn.Business.Constants;
 using Oathsworn.Business.Helpers;
 using Oathsworn.Business.Services;
-using Oathsworn.SignalR;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 
 namespace Oathsworn.Business
 {
@@ -176,19 +174,19 @@ namespace Oathsworn.Business
                 .Where(x => rerollModel.MightCards.Contains(x.Id))
                 .ToList();
 
-            var critCards = _mightCardsService.DrawCardsFromCritCards(cardsToRedraw.First().DeckId, attack.Id, cardsToRedraw);
+            var critCards = _mightCardsService.DrawCardsFromCritCards(cardsToRedraw.First().DeckId, attack.Id, CharacterType.Player, cardsToRedraw);
             while (critCards.Any(x => x.IsCritical))
             {
                 cardsToRedraw.AddRange(critCards);
-                critCards = _mightCardsService.DrawCardsFromCritCards(cardsToRedraw.First().DeckId, attack.Id, critCards);
+                critCards = _mightCardsService.DrawCardsFromCritCards(cardsToRedraw.First().DeckId, attack.Id, CharacterType.Player, critCards);
             }
             cardResult.AddRange(critCards);
 
-            var nonCritCards = _mightCardsService.DrawCardsFromCards(cardsToRedraw.First().DeckId, attack.Id, cardsToRedraw.Where(x => !x.IsCritical).ToList());
+            var nonCritCards = _mightCardsService.DrawCardsFromCards(cardsToRedraw.First().DeckId, attack.Id, CharacterType.Player, cardsToRedraw.Where(x => !x.IsCritical).ToList());
             while (nonCritCards.Any(x => x.IsCritical))
             {
                 cardsToRedraw.AddRange(nonCritCards);
-                nonCritCards = _mightCardsService.DrawCardsFromCritCards(cardsToRedraw.First().DeckId, attack.Id, nonCritCards);
+                nonCritCards = _mightCardsService.DrawCardsFromCritCards(cardsToRedraw.First().DeckId, attack.Id, CharacterType.Player, nonCritCards);
             }
             cardResult.AddRange(nonCritCards);
 
@@ -228,15 +226,20 @@ namespace Oathsworn.Business
                 throw new Exception("Invalid number of empower tokens");
             }
 
+            // Assume that boss is the target
+            var bossEntity = _bosses.ReadOne(x => x.EncounterId == encounterId);
+            var boss = _bossFactory.GetBossInstance(bossEntity);
+            if (!boss.GetBossPositions().Any(x => x.EqualTo(attackModel.Target))){
+                throw new Exception("Boss is not targeted");
+            }
+
             // Calculate bonus damage that would be done
 
             var attack = new Attack()
             {
                 PlayerId = attackModel.PlayerId,
-                // Temporarily hardcode boss as target
-                BossId = attackModel.EnemyId,
-                // Temporarily hardcode core as target
-                BossPart = (BossPart.Core, 1).ConvertToString(),
+                BossId = bossEntity.Id,
+                BossPart = boss.GetBossPartFromPosition(attackModel.Target).ConvertToString(),
                 // Temporarily hardcode bonus damage as 0
                 BonusDamage = 0,
                 EmpowerTokensUsed = attackModel.EmpowerTokensUsed
@@ -249,17 +252,17 @@ namespace Oathsworn.Business
             var cardsDrawn = new List<MightCard>();
             var cardsDrawnFromCrit = new List<MightCard>();
 
-            cardsDrawn.AddRange(_mightCardsService.DrawCards(playerMightDeck.Id, attack.Id, attackModel.Might));
+            cardsDrawn.AddRange(_mightCardsService.DrawCards(playerMightDeck.Id, attack.Id, CharacterType.Player, attackModel.Might));
 
             if (cardsDrawn.Any(x => x.IsCritical))
             {
-                cardsDrawnFromCrit.AddRange(_mightCardsService.DrawCardsFromCritCards(playerMightDeck.Id, attack.Id, cardsDrawn));
+                cardsDrawnFromCrit.AddRange(_mightCardsService.DrawCardsFromCritCards(playerMightDeck.Id, attack.Id, CharacterType.Player, cardsDrawn));
             }
 
             while (cardsDrawnFromCrit.Any(x => x.IsCritical))
             {
                 cardsDrawn.AddRange(cardsDrawnFromCrit);
-                cardsDrawnFromCrit = _mightCardsService.DrawCardsFromCritCards(playerMightDeck.Id, attack.Id, cardsDrawnFromCrit);
+                cardsDrawnFromCrit = _mightCardsService.DrawCardsFromCritCards(playerMightDeck.Id, attack.Id, CharacterType.Player, cardsDrawnFromCrit);
             }
             cardsDrawn.AddRange(cardsDrawnFromCrit);
 
@@ -284,23 +287,23 @@ namespace Oathsworn.Business
             }
 
             _bossFactory.GetBossInstance(encounter.Boss).BeginAction();
+            
+            await _notificationService.UpdateGameState(encounterId);
         }
 
-        public async Task ContinueBossAction(int encounterId)
+        public async Task ContinueEnemyAction(int encounterId)
         {
+            //ignore minions for now
             var encounter = _encounters.ReadOne(x => x.Id == encounterId, x => x.Boss);
 
-            if (encounter is null || encounter.CharacterPerformingAction is not null)
+            if (encounter is null || encounter.CharacterPerformingAction != CharacterType.Boss)
             {
                 throw new Exception("Invalid encounter state");
             }
 
             _bossFactory.GetBossInstance(encounter.Boss).PerformAction();
-        }
 
-        public async Task AcceptBossAttack(int encounterId, int attackId)
-        {
-            // refresh players
+            await _notificationService.UpdateGameState(encounterId);
         }
 
         public int StartEncounter()

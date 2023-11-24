@@ -7,9 +7,10 @@ import { formatBossPart } from "../utils/constants";
 
 export interface BossSummaryProps {
   boss: BossModel;
+  selectedBossPart: string | null;
 }
 
-export const BossSummary = observer(({ boss }: BossSummaryProps) => {
+export const BossSummary = observer(({ boss, selectedBossPart }: BossSummaryProps) => {
   return (
     <div className={"rounded-lg overflow-hidden shadow-xl text-center px-2 py-2 caret-transparent bg-zinc-400"}>
       <div className="justify-center text-xl font-bold mb-2">
@@ -18,7 +19,7 @@ export const BossSummary = observer(({ boss }: BossSummaryProps) => {
       <div className="flex flex-col gap-2 justify-center items-center">
         {Object.keys(boss.health).map(bossPart =>
           <div className="flex items-center">
-            <h2 className="font-semibold mr-2">{formatBossPart(bossPart)}</h2>
+            <h2 className={`mr-2 ${bossPart === selectedBossPart ? "font-bold" : "font-semibold"}`}>{formatBossPart(bossPart)}</h2>
             <HealthDice health={boss.health[bossPart]} className="w-10 h-10" />
           </div>
         )}
@@ -31,9 +32,9 @@ export const BossSummary = observer(({ boss }: BossSummaryProps) => {
         Next Action
       </div>
       <div className="flex flex-col gap-2 justify-center items-center">
-        {boss.nextAction.map(actionComponent =>
+        {boss.nextAction.map((actionComponent, i) =>
           <div className="flex items-center">
-            <h2 className="font-semibold">{actionComponent}</h2>
+            <h2 className={boss.actionComponentIndex === i ? "font-bold" : "font-semibold"}>{actionComponent}</h2>
           </div>
         )}
       </div>

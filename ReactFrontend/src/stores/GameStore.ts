@@ -2,7 +2,7 @@ import { makeAutoObservable } from "mobx";
 import { GameStateModel } from "../utils/apiModels";
 import { BoardStore } from "./BoardStore";
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
-import { SIGNALR_CODES } from "../utils/constants";
+import { ENCOUNTER_ID, SIGNALR_CODES } from "../utils/constants";
 
 export class GameStore {
   connection: HubConnection;
@@ -31,7 +31,7 @@ export class GameStore {
 
   register = async () => {
     // temporary hardcode
-    const encounterId = 1;
+    const encounterId = ENCOUNTER_ID;
     try {
       const response = await this.connection.invoke("register", encounterId);
       if (response === SIGNALR_CODES.SUCCESS) {

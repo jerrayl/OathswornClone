@@ -1,5 +1,8 @@
 import { Might, Position } from "./apiModels"
 
+// Temporary hardcode
+export const ENCOUNTER_ID = 1;
+
 export const SIGNALR_CODES = {
     SUCCESS: "SUCCESS"
 }
@@ -184,5 +187,5 @@ export const BOARD_MAPPING: { [key: number]: Position } = {
 
 export const formatBossPart = (bossPart: string) => {
     const bossPartSplit = bossPart.split(" ");
-    return bossPartSplit[1] === "1" ? bossPartSplit[0] : bossPart; 
+    return bossPartSplit[1] === "0" ? bossPartSplit[0] : bossPart; 
 }

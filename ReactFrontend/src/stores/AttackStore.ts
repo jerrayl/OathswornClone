@@ -1,6 +1,6 @@
 import { IObservableArray, makeAutoObservable, observable } from "mobx";
 import { completeAttack, rerollAttack, startAttack } from "../utils/api";
-import { Might, PlayerModel } from "../utils/apiModels";
+import { Might, PlayerModel, Position } from "../utils/apiModels";
 import { MightCard } from "../utils/types";
 
 export class AttackStore {
@@ -10,7 +10,7 @@ export class AttackStore {
   }
 
   player: PlayerModel;
-  enemyId = 1;
+  target: Position = {xPosition: 0, yPosition: 0};
   attackId: number | null = null;
   isBossTargeted = true;
   mightCards = observable.map<Might, number>({ [Might.White]: 0, [Might.Yellow]: 0, [Might.Red]: 0, [Might.Black]: 0 });
@@ -58,7 +58,7 @@ export class AttackStore {
   }
 
   async drawCards() {
-    var result = await startAttack({ playerId: this.player.id, enemyId: this.enemyId, might: Object.fromEntries(this.mightCards.toJSON()), empowerTokensUsed: this.empowerTokensUsed, isBossTargeted: this.isBossTargeted });
+    var result = await startAttack({ playerId: this.player.id, target: this.target, might: Object.fromEntries(this.mightCards.toJSON()), empowerTokensUsed: this.empowerTokensUsed });
     this.attackId = result.attackId;
     this.cardsDrawn = observable.array(result.cardsDrawn);
   }

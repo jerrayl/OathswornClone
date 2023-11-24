@@ -6,5 +6,7 @@ namespace Oathsworn.Models
     {
         public List<PlayerModel> Players { get; set; }
         public BossModel Boss { get; set; }
+        public CharacterType? CharacterPerformingAction { get; set; }
+        public DisplayAttackModel Attack { get; set; }
     }
 }

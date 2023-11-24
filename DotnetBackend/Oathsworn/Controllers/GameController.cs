@@ -177,5 +177,24 @@ namespace Oathsworn.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpPost]
+        [Route("continue-enemy-action")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ApiExplorerSettings(GroupName = "Game")]
+        public async Task<IActionResult> ContinueEnemyAction([FromQuery] int encounterId)
+        {
+            try
+            {
+                await _game.ContinueEnemyAction(encounterId);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

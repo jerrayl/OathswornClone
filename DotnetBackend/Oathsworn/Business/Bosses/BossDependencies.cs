@@ -14,6 +14,7 @@ namespace Oathsworn.Business.Bosses
         IDatabaseRepository<BossAction> BossActions { get; }
         IDatabaseRepository<BossAttack> BossAttacks { get; }
         IDatabaseRepository<BossAttackPlayer> BossAttackPlayers { get; }
+        IDatabaseRepository<MightCard> MightCards { get; }
         IMightCardsService MightCardsService { get; }
         IMapper Mapper { get; }
     }
@@ -27,6 +28,7 @@ namespace Oathsworn.Business.Bosses
         public IDatabaseRepository<BossAction> BossActions { get; init; }
         public IDatabaseRepository<BossAttack> BossAttacks { get; init; }
         public IDatabaseRepository<BossAttackPlayer> BossAttackPlayers { get; init; }
+        public IDatabaseRepository<MightCard> MightCards { get; init; }
         public IMightCardsService MightCardsService { get; init; }
         public IMapper Mapper { get; init; }
 
@@ -38,6 +40,7 @@ namespace Oathsworn.Business.Bosses
             IDatabaseRepository<BossAction> bossActions,
             IDatabaseRepository<BossAttack> bossAttacks,
             IDatabaseRepository<BossAttackPlayer> bossAttackPlayers,
+            IDatabaseRepository<MightCard> mightCards,
             IMightCardsService mightCardsService,
             IMapper mapper
         )
@@ -49,6 +52,7 @@ namespace Oathsworn.Business.Bosses
             BossActions = bossActions;
             BossAttacks = bossAttacks;
             BossAttackPlayers = bossAttackPlayers;
+            MightCards = mightCards;
             MightCardsService = mightCardsService;
             Mapper = mapper;
         }

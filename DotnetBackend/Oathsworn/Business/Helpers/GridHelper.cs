@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Oathsworn.Business.Constants;
 using Oathsworn.Entities;
 using Oathsworn.Extensions;
+using Oathsworn.Models;
 
 namespace Oathsworn.Business.Helpers
 {
     public static class GridHelper
     {
-        public const int COORDINATE_MAX_VALUE = 8;
-        public const int COORDINATE_MIN_VALUE = COORDINATE_MAX_VALUE * -1;
-        public const int MAX_DISTANCE = COORDINATE_MAX_VALUE * 2;
+        public const int MAX_DISTANCE = 16;
+        public static readonly Direction[] ORDERED_DIRECTIONS = { Direction.North, Direction.NorthWest, Direction.NorthEast, Direction.SouthWest, Direction.South, Direction.SouthEast };
 
         public static int? GetDistanceAlongAxis(IPosition position1, IPosition position2)
         {
@@ -34,7 +33,9 @@ namespace Oathsworn.Business.Helpers
             {
                 Template.Cone => throw new NotImplementedException(),
                 Template.Wave => throw new NotImplementedException(),
-                Template.Hex => Templates.GetTemplateForHex(size),
+                Template.Hex => TemplateHelper.GetTemplateForHex(size),
+                Template.Ring => TemplateHelper.GetTemplateForRing(size),
+                Template.Line => direction is null ? throw new ArgumentNullException() : TemplateHelper.GetTemplateForLine(size, direction.Value),
                 _ => throw new NotImplementedException()
             };
 
@@ -72,22 +73,17 @@ namespace Oathsworn.Business.Helpers
 
         public static bool IsValidPosition(IPosition position)
         {
-            return position.XPosition <= COORDINATE_MAX_VALUE && position.XPosition >= COORDINATE_MIN_VALUE && position.YPosition <= COORDINATE_MAX_VALUE && position.YPosition >= COORDINATE_MIN_VALUE;
+            return (Math.Abs(position.XPosition) % 2 == 0) ? Math.Abs(GetNorthValue(position)) <= 8 : Math.Abs(GetNorthValue(position)) <= 9;
         }
 
+        public static int GetNorthValue(IPosition p) => p.XPosition + 2 * p.YPosition;
+
         // Overaching game rule preferences north and west to break ties, hence this direction is hardcoded 
-        public static IPosition GetNorthWestiest(IEnumerable<IPosition> positions)
+        public static Comparer<IPosition> NorthWestiestComparer => Comparer<IPosition>.Create((a, b) =>
         {
-            if (positions.Count() == 0) {
-                throw new ArgumentException();
-            }
-            var getNorthValue = (IPosition p) => p.XPosition + 2 * p.YPosition;
-            return positions.Min(Comparer<IPosition>.Create((a, b) =>
-            {
-                var northValueDifference = getNorthValue(a) - getNorthValue(b);
-                return northValueDifference == 0 ? a.XPosition - b.XPosition : northValueDifference;
-            }))!;
-        }
+            var northValueDifference = GetNorthValue(a) - GetNorthValue(b);
+            return northValueDifference == 0 ? a.XPosition - b.XPosition : northValueDifference;
+        });
 
         public static IPosition? GetNearest(IPosition position, IEnumerable<IPosition> targets, int startRange = 1, int endRange = MAX_DISTANCE)
         {
@@ -97,10 +93,86 @@ namespace Oathsworn.Business.Helpers
                 var foundTargets = targets.Where(t => positions.Any(p => p.EqualTo(t)));
                 if (foundTargets.Any())
                 {
-                    return GetNorthWestiest(foundTargets);
+                    return foundTargets.Min(NorthWestiestComparer);
                 }
             }
             return null;
+        }
+
+        public static Direction GetRelativeDirection(IPosition position1, IPosition position2)
+        {
+            var relativePosition = position2.Subtract(position1);
+            if (GetNorthValue(position1) >= GetNorthValue(position2)) //North
+            {
+                if (relativePosition.XPosition < relativePosition.YPosition)
+                {
+                    return Direction.NorthWest;
+                }
+                else if (Math.Abs(relativePosition.XPosition) > Math.Abs(relativePosition.YPosition) / 2)
+                {
+                    return Direction.NorthEast;
+                }
+                return Direction.North;
+            }
+            else //South
+            {
+                if (relativePosition.XPosition > relativePosition.YPosition)
+                {
+                    return Direction.SouthEast;
+                }
+                else if (Math.Abs(relativePosition.XPosition) > Math.Abs(relativePosition.YPosition) / 2)
+                {
+                    return Direction.SouthWest;
+                }
+                return Direction.South;
+            }
+        }
+
+        public static Direction TryAllDirections(Func<Direction, bool> predicate, Direction firstDirection)
+        {
+            foreach (var direction in new List<Direction>() { firstDirection }.Concat(ORDERED_DIRECTIONS.Where(x => x != firstDirection)))
+            {
+                if (predicate(direction))
+                {
+                    return direction;
+                }
+            }
+            throw new Exception("No direction worked");
+        }
+
+        public static (Direction, int) TryAllDirectionsAndDistances(Func<Direction, int, bool> predicate, Direction firstDirection)
+        {
+            foreach (var i in Enumerable.Range(1, MAX_DISTANCE))
+            {
+                foreach (var direction in new List<Direction>() { firstDirection }.Concat(ORDERED_DIRECTIONS.Where(x => x != firstDirection)))
+                {
+                    if (predicate(direction, i))
+                    {
+                        return (direction, i);
+                    }
+                }
+
+            }
+            throw new Exception("No combination of direction and distance worked");
+        }
+
+        public static Direction Bounce(Direction direction)
+        {
+            return direction switch
+            {
+                Direction.North => Direction.South,
+                Direction.NorthEast => Direction.NorthWest,
+                Direction.NorthWest => Direction.NorthEast,
+                Direction.South => Direction.North,
+                Direction.SouthEast => Direction.SouthWest,
+                Direction.SouthWest => Direction.SouthEast,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+
+        public static bool IsOverlapping(IPosition target, params IEnumerable<IPosition>[] positions)
+        {
+            return positions.SelectMany(x => x).Any(p => p.EqualTo(target));
         }
     }
 }

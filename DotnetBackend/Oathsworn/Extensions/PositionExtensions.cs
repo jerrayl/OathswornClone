@@ -12,10 +12,17 @@ namespace Oathsworn.Extensions
 
         public static IPosition Add(this IPosition position, IPosition addend)
         {
-            return new Position(){
-                XPosition = position.XPosition + addend.XPosition,
-                YPosition = position.YPosition + addend.YPosition
-            };
+            return new Position(position.XPosition + addend.XPosition, position.YPosition + addend.YPosition);
+        }
+
+        public static IPosition Subtract(this IPosition position, IPosition subtrahend )
+        {
+            return new Position(position.XPosition - subtrahend.XPosition, position.YPosition - subtrahend.YPosition);
+        }
+
+        public static IPosition Multiply(this IPosition position, int multiplier)
+        {
+            return new Position(position.XPosition * multiplier, position.YPosition * multiplier);
         }
     }
 }

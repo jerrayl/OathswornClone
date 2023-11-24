@@ -10,9 +10,9 @@ namespace Oathsworn.Business.Services
 {
     public interface IMightCardsService
     {
-        List<MightCard> DrawCardsFromCritCards(int deckId, int attackId, List<MightCard> cards);
-        List<MightCard> DrawCardsFromCards(int deckId, int attackId, List<MightCard> cards);
-        List<MightCard> DrawCards(int deckId, int attackId, Dictionary<Might, int> cardsToDraw);
+        List<MightCard> DrawCardsFromCritCards(int deckId, int attackId, CharacterType attacker, List<MightCard> cards);
+        List<MightCard> DrawCardsFromCards(int deckId, int attackId, CharacterType attacker, List<MightCard> cards);
+        List<MightCard> DrawCards(int deckId, int attackId, CharacterType attacker, Dictionary<Might, int> cardsToDraw);
     }
 
     public class MightCardsService : IMightCardsService
@@ -26,11 +26,12 @@ namespace Oathsworn.Business.Services
             _mightCards = mightCards;
         }
 
-        public List<MightCard> DrawCardsFromCritCards(int deckId, int attackId, List<MightCard> cards)
+        public List<MightCard> DrawCardsFromCritCards(int deckId, int attackId, CharacterType attacker, List<MightCard> cards)
         {
             var cardsDrawn = DrawCardsFromCards(
                 deckId,
                 attackId,
+                attacker,
                 cards.Where(x => x.IsCritical).ToList()
             );
             cardsDrawn.ForEach(x => x.IsDrawnFromCritical = true);
@@ -38,11 +39,12 @@ namespace Oathsworn.Business.Services
             return cardsDrawn;
         }
 
-        public List<MightCard> DrawCardsFromCards(int deckId, int attackId, List<MightCard> cards)
+        public List<MightCard> DrawCardsFromCards(int deckId, int attackId, CharacterType attacker, List<MightCard> cards)
         {
             var cardsDrawn = DrawCards(
                 deckId,
                 attackId,
+                attacker,
                 cards
                     .GroupBy(x => x.Type)
                     .ToDictionary(x => x.Key, x => x.Count())
@@ -50,7 +52,7 @@ namespace Oathsworn.Business.Services
             return cardsDrawn;
         }
 
-        public List<MightCard> DrawCards(int deckId, int attackId, Dictionary<Might, int> cardsToDraw)
+        public List<MightCard> DrawCards(int deckId, int attackId, CharacterType attacker, Dictionary<Might, int> cardsToDraw)
         {
             var cardsDrawn = new List<MightCard>();
             var mightDeckCards = GetMightCards(deckId);
@@ -74,17 +76,22 @@ namespace Oathsworn.Business.Services
                 }
             }
 
-            cardsDrawn.ForEach(x => x.AttackId = attackId);
+            if (attacker == CharacterType.Player)
+            {
+                cardsDrawn.ForEach(x => x.AttackId = attackId);
+            }
+            else
+            {
+                cardsDrawn.ForEach(x => x.BossAttackId = attackId);
+            }
             _mightCards.UpdateBatch(cardsDrawn);
             return cardsDrawn;
         }
 
         private Dictionary<Might, List<MightCard>> GetMightCards(int deckId)
         {
-            var mightCards = _mightCards
-                .Read(x => x.DeckId == deckId && x.AttackId is null);
             return _mightCards
-                .Read(x => x.DeckId == deckId && x.AttackId is null)
+                .Read(x => x.DeckId == deckId && x.AttackId is null && x.BossAttackId is null)
                 .OrderBy(x => x.Id)
                 .GroupBy(x => x.Type)
                 .ToDictionary(x => x.Key, x => x.ToList());

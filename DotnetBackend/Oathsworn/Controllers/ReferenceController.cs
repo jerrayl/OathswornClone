@@ -17,14 +17,5 @@ namespace Oathsworn.Controllers
         {
             return new StatusCodeResult(418);
         }
-
-        [HttpPost]
-        [Route("charactertype")]
-        [ProducesResponseType(StatusCodes.Status418ImATeapot)]
-        [ApiExplorerSettings(GroupName = "Reference")]
-        public IActionResult GameState([FromBody] CharacterType type)
-        {
-            return new StatusCodeResult(418);
-        }
     }
 }

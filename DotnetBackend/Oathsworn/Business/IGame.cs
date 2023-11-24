@@ -14,5 +14,6 @@ namespace Oathsworn.Business
         Task Move(int encounterId, MoveModel moveModel);
         Task SpendToken(int encounterId, SpendTokenModel spendTokenModel);
         Task EndTurn(int encounterId);
+        Task ContinueEnemyAction(int encounterId);
     }
 }
