@@ -38,7 +38,6 @@ export const BossSummary = observer(({ boss, selectedBossPart }: BossSummaryProp
           </div>
         )}
       </div>
-
     </div >
   );
 });

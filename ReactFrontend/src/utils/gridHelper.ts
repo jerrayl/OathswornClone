@@ -19,6 +19,10 @@ export const Equal = (position1: Position | null, position2: Position | null): b
     return !!position1 && !!position2 && position1.xPosition === position2.xPosition && position1.yPosition === position2.yPosition;
 }
 
+export const ContainsPosition = (positionArr: Position[], position: Position | null): boolean => {
+    return positionArr.filter(x => Equal(x, position)).length > 0;
+}
+
 export const GetDistanceAlongAxis = (position1: Position, position2: Position): Number | null => {
     if (!IsOnSameAxis(position1, position2)) {
         return null;
@@ -92,11 +96,19 @@ export const GetRing = (position: Position, size: number = 1): Position[] => {
     return positions.map(x => Add(x, position)).filter(IsValidPosition);
 }
 
-export const GetNearest = (position: Position, targets: Position[], startRange: number = 1, endRange: number = MAX_DISTANCE) => {
-    Range(startRange, endRange).forEach(i => {
-        var foundTargets = GetRing(position, i).filter(p => targets.filter(t => Equal(t, p)).length > 0);
+export const GetAllNearest = (position: Position, targets: Position[], startRange: number = 1, endRange: number = MAX_DISTANCE): Position[] | null => {
+    for (var i = startRange; i <= endRange; i++) {
+        const foundTargets = GetRing(position, i).filter(p => ContainsPosition(targets, p));
         if (foundTargets.length > 0) {
-            return GetNorthWestiest(foundTargets);
+            return foundTargets;
         }
-    });
+    }
+    return null;
+}
+
+export const GetNearest = (position: Position, targets: Position[], startRange: number = 1, endRange: number = MAX_DISTANCE) => {
+    const foundTargets = GetAllNearest(position, targets, startRange, endRange);
+    if (foundTargets) {
+        return GetNorthWestiest(targets);
+    }
 }

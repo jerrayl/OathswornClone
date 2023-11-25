@@ -18,13 +18,12 @@ export interface GameProps {
 export const Game = observer(({ boardStore }: GameProps) => {
   return (
     <div>
-      {boardStore.attackStore && <AttackModal attackStore={boardStore.attackStore} closeModal={() => boardStore.attackStore = null} />}
+      {boardStore.attackStore && <AttackModal attackStore={boardStore.attackStore} bossPart={boardStore.targetedBossPart} closeModal={() => boardStore.attackStore = null} />}
       {boardStore.pendingMove && <MoveModal cost={boardStore.selectedPath.length} move={boardStore.move} closeModal={boardStore.cancelMove} />}
       {boardStore.getGameState().attack && <DisplayAttackModal displayAttackModel={boardStore.getGameState().attack} continueAction={boardStore.continueEnemyAction} />}
       <div className="grid grid-cols-10 caret-transparent">
         <div className="flex flex-col justify-evenly col-span-2 mt-2">
           <div className="flex justify-around">
-            <Button text="Attack" onClick={() => boardStore.attack()} />
             {
               !boardStore.getGameState().characterPerformingAction ? 
               <Button text="End Turn" onClick={() => boardStore.endTurn()} />:

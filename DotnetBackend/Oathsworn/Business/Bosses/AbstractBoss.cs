@@ -110,8 +110,8 @@ namespace Oathsworn.Business.Bosses
         {
             var bodyPosition = BodyMappings
                 .Where(m =>
-                    m.RelativePosition.XPosition == BossEntity.XPosition - position.XPosition &&
-                    m.RelativePosition.YPosition == BossEntity.YPosition - position.YPosition
+                    m.RelativePosition.XPosition == position.XPosition - BossEntity.XPosition &&
+                    m.RelativePosition.YPosition == position.YPosition - BossEntity.YPosition
                 )
                 .Single();
 
@@ -348,10 +348,11 @@ namespace Oathsworn.Business.Bosses
                 BossDependencies.EncounterPlayers.Update(encounterPlayer);
                 // handle scenario where player health drops below 1
             }
-
             BossDependencies.MightCards.DeleteBatch(attack.MightCards);
             BossDependencies.BossAttackPlayers.DeleteBatch(attack.BossAttackPlayers);
             BossDependencies.BossAttacks.Delete(attack);
+
+            BossEntity.ActionComponentIndex++;
         }
 
         private BossAction GetNextAction()

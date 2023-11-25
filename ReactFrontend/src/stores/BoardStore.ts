@@ -1,6 +1,6 @@
 import { IObservableArray, makeAutoObservable, observable } from "mobx";
-import { Equal, IsAdjacent } from "../utils/gridHelper";
-import { CharacterType, GameStateModel, PlayerModel, Position } from "../utils/apiModels";
+import { ContainsPosition, Equal, GetAllNearest, IsAdjacent } from "../utils/gridHelper";
+import { CharacterType, GameStateModel, Position } from "../utils/apiModels";
 import { continueEnemyAction, endTurn, move } from "../utils/api";
 import { AttackStore } from "./AttackStore";
 import { TileOccupant } from "../utils/types";
@@ -21,23 +21,47 @@ export class BoardStore {
   }
 
   get selectedBossPart() {
-    return this.selectedCharacter &&
-      this.selectedCharacter.type == CharacterType.Boss &&
-      this.getGameState().boss.positions.filter(p => p.xPosition == this.selectedPosition?.xPosition && p.yPosition == this.selectedPosition?.yPosition)[0];
+    return this.selectedCharacter && this.selectedCharacter.type == CharacterType.Boss
+      ? this.getGameState().boss.positions.filter(p => p.xPosition == this.selectedPosition?.xPosition && p.yPosition == this.selectedPosition?.yPosition)[0]
+      : null;
   }
 
   get selectedPlayer() {
-    return this.selectedCharacter &&
-      this.selectedCharacter.type == CharacterType.Player &&
-      this.getGameState().players.filter(x => x.id == this.selectedCharacter!.id)[0];
+    return this.selectedCharacter && this.selectedCharacter.type == CharacterType.Player
+      ? this.getGameState().players.filter(x => x.id == this.selectedCharacter!.id)[0]
+      : null;
   }
 
   get selectedCharacter() {
     return this.selectedPosition && this.getTileOccupant(this.selectedPosition);
   }
 
+  get targetedBossPart() {
+    return this.attackStore && this.getGameState().boss.positions.filter(x => Equal(x, this.attackStore!.target))[0].bossPart;
+  }
+
   selectTile = (position: Position) => {
+    if (this.selectedPath.length > 0 && ContainsPosition(this.selectedPath, position) && !Equal(this.selectedPath[this.selectedPath.length - 1], position)) {
+      // Clicked on a tile what was not the last in the path
+      return;
+    }
+
     const occupant = this.getTileOccupant(position);
+
+    if (this.selectedPath.length > 0 && occupant?.type == CharacterType.Boss) {
+      const boss = this.getGameState().boss;
+      const validBossPositions = boss.positions.filter(x => boss.health[x.bossPart] > 0);
+      const nearestBossPositions = GetAllNearest(this.selectedPlayer!, validBossPositions);
+      if (nearestBossPositions && ContainsPosition(nearestBossPositions, position)) {
+        this.attack(position);
+        return;
+      }
+
+      this.selectedPosition = null;
+      this.selectedPath = observable.array();
+      return;
+    }
+
     if (occupant) {
       this.selectedPosition = position;
       this.selectedPath = observable.array();
@@ -48,6 +72,7 @@ export class BoardStore {
       (this.selectedPath.length === 0 && IsAdjacent(this.selectedPosition!, position) ||
         this.selectedPath.length > 0 && IsAdjacent(this.selectedPath[this.selectedPath.length - 1], position))
     ) {
+      // Valid continuation of path
       this.selectedPath.push(position);
       return;
     }
@@ -67,9 +92,9 @@ export class BoardStore {
     this.selectedPath = observable.array();
   }
 
-  attack = () => {
+  attack = (target: Position) => {
     if (this.selectedPlayer) {
-      this.attackStore = new AttackStore(this.selectedPlayer);
+      this.attackStore = new AttackStore(this.selectedPlayer, target);
     }
   }
 
@@ -91,7 +116,7 @@ export class BoardStore {
   }
 
   tileIsHighlighted = (position: Position | null): boolean => {
-    return this.selectedPath.filter(x => Equal(x, position)).length === 1;
+    return ContainsPosition(this.selectedPath, position);
   }
 
   getTileColor = (position: Position): string => {

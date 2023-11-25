@@ -5,7 +5,7 @@ import { tokenIconMap } from "../assets/icons/TokenIcons";
 import { AttackStore } from "../stores/AttackStore";
 import { Might, Token } from "../utils/apiModels";
 import { Button } from "./shared/Button";
-import { COLORS } from "../utils/constants";
+import { COLORS, formatBossPart } from "../utils/constants";
 import { MightCardDisplay } from "./shared/MightCardDisplay";
 
 export interface MightTypeSelectorProps {
@@ -28,10 +28,11 @@ export const MightTypeSelector = ({ might, value, changeValue }: MightTypeSelect
 
 export interface AttackModalProps {
     attackStore: AttackStore;
+    bossPart: string | null;
     closeModal: () => void;
 }
 
-export const AttackModal = observer(({ attackStore, closeModal }: AttackModalProps) => {
+export const AttackModal = observer(({ attackStore, closeModal, bossPart }: AttackModalProps) => {
     return (
         <div className="font-serif fixed z-10 inset-0 flex items-center justify-center min-h-full caret-transparent bg-stone-800 bg-opacity-40">
             <div className="rounded-lg overflow-hidden shadow-xl max-w-lg min-w-[25%]">
@@ -39,7 +40,7 @@ export const AttackModal = observer(({ attackStore, closeModal }: AttackModalPro
                     <div className="text-center">
                         <div className="flex justify-between">
                             <h3 className="text-xl font-medium">
-                                Attack
+                                Attack {bossPart ? formatBossPart(bossPart) : ""}
                             </h3>
                             <h3
                                 className="text-xl font-sans cursor-pointer font-medium -mt-1"

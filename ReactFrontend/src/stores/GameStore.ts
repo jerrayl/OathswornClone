@@ -2,7 +2,7 @@ import { makeAutoObservable } from "mobx";
 import { GameStateModel } from "../utils/apiModels";
 import { BoardStore } from "./BoardStore";
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
-import { ENCOUNTER_ID, SIGNALR_CODES } from "../utils/constants";
+import { ENCOUNTER_ID, PORT_NUMBER, SIGNALR_CODES } from "../utils/constants";
 
 export class GameStore {
   connection: HubConnection;
@@ -12,13 +12,12 @@ export class GameStore {
   constructor() {
     makeAutoObservable(this);
     const newConnection = new HubConnectionBuilder()
-      .withUrl(`https://localhost:5001/signalr`)
+      .withUrl(`https://localhost:${PORT_NUMBER}/signalr`)
       .withAutomaticReconnect()
       .build();
 
     newConnection.on('GameState', message => {
       this.gameState = message;
-      console.log(message);
     });
     this.connection = newConnection;
     this.startConnection();

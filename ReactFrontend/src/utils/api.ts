@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { AttackModel, MoveModel, RerollModel } from './apiModels';
-import { ENCOUNTER_ID } from './constants';
+import { ENCOUNTER_ID, PORT_NUMBER } from './constants';
 
 const api = axios.create({
-    baseURL: `https://localhost:5001/api/`,
+    baseURL: `https://localhost:${PORT_NUMBER}/api/`,
     headers: {
         'Content-Type': 'application/json',
     },

@@ -4,13 +4,14 @@ import { Might, PlayerModel, Position } from "../utils/apiModels";
 import { MightCard } from "../utils/types";
 
 export class AttackStore {
-  constructor(player: PlayerModel) {
+  constructor(player: PlayerModel, target: Position) {
     makeAutoObservable(this);
     this.player = player;
+    this.target = target;
   }
 
   player: PlayerModel;
-  target: Position = {xPosition: 0, yPosition: 0};
+  target: Position;
   attackId: number | null = null;
   isBossTargeted = true;
   mightCards = observable.map<Might, number>({ [Might.White]: 0, [Might.Yellow]: 0, [Might.Red]: 0, [Might.Black]: 0 });
@@ -66,11 +67,9 @@ export class AttackStore {
   async redrawCards() {
     var result = await rerollAttack({ attackId: this.attackId!, mightCards: this.cardsToRedraw.toJSON(), rerollTokensUsed: this.redrawTokensUsed });
     this.cardsDrawn = observable.array(result.cardsDrawn);
-    console.log(result);
   }
 
   async completeAttack() {
     var result = await completeAttack(this.attackId!);
-    console.log(result);
   }
 }

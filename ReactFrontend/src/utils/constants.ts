@@ -3,6 +3,9 @@ import { Might, Position } from "./apiModels"
 // Temporary hardcode
 export const ENCOUNTER_ID = 1;
 
+// Todo: move to env
+export const PORT_NUMBER = "5001";
+
 export const SIGNALR_CODES = {
     SUCCESS: "SUCCESS"
 }
