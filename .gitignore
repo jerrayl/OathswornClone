@@ -1,12 +1,4 @@
-DotnetBackend/Oathsworn/obj
-DotnetBackend/Oathsworn/bin
-DotnetBackend/OathswornTests/obj
-DotnetBackend/OathswornTests/bin
-DotnetBackend/.vs
-DotnetBackend/Oathsworn/Oathsworn.db
-DotnetBackend/Oathsworn/Oathsworn.db-shm
-DotnetBackend/Oathsworn/Oathsworn.db-wal
 .vscode
-ReactFrontend/src/utils/apiModels.ts
-DotnetBackend/OathswornTests/obj/project.assets.json
-DotnetBackend/OathswornTests/obj/project.nuget.cache
+.vs
+obj
+bin
