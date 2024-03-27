@@ -7,6 +7,8 @@ export const SIGNALR_CODES = {
     SUCCESS: "SUCCESS"
 }
 
+export const BOARD = Array(161 + 10).fill("");
+
 export const COLORS = {
     [Might.White]: "bg-gray-100 text-gray-900",
     [Might.Yellow]: "bg-yellow-400 text-gray-900",

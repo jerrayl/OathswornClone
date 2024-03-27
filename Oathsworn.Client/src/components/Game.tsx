@@ -2,14 +2,12 @@ import { observer } from "mobx-react";
 import { AttackModal } from "./AttackModal";
 import { MoveModal } from "./MoveModal";
 import { Button } from "./shared/Button";
-import { BOARD_MAPPING } from "../utils/constants";
+import { BOARD, BOARD_MAPPING } from "../utils/constants";
 import { BoardStore } from "../stores/BoardStore";
 import { PlayerSummary } from "./PlayerSummary";
 import { BossSummary } from "./BossSummary";
 import { CharacterType } from "../utils/apiModels";
 import { DisplayAttackModal } from "./DisplayAttackModal";
-
-export const BOARD = Array(161 + 10).fill("");
 
 export interface GameProps {
   boardStore: BoardStore;
