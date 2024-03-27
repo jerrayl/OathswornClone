@@ -7,10 +7,15 @@ import {
 } from "react-router-dom";
 import './index.css'
 import { EncounterBuilder } from './EncounterBuilder/EncounterBuilder.tsx';
+import { SplashScreen } from './SplashScreen/SplashScreen.tsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <SplashScreen />,
+  },
+  {
+    path: "/game",
     element: <App />,
   },
   {
