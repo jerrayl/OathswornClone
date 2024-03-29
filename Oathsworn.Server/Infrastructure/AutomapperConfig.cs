@@ -15,6 +15,7 @@ namespace Oathsworn.Infrastructure
         : base(profileName)
         {
             CreateMap<Player, PlayerSummaryModel>();
+            CreateMap<FreeCompany, FreeCompanyModel>();
             CreateMap<MightCard, MightCardModel>();
             CreateMap<EncounterPlayer, PlayerModel>()
                 .ForMember(dest => dest.Class, m => m.MapFrom(src => src.Player.Class))

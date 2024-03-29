@@ -8,12 +8,17 @@ import './index.css'
 import "./App.css";
 import { EncounterBuilder } from './EncounterBuilder/EncounterBuilder.tsx';
 import { SplashScreen } from './SplashScreen/SplashScreen.tsx';
+import { MainMenu } from './MainMenu/MainMenu.tsx';
 import { Game } from './Game/components/Game.tsx'
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <SplashScreen />,
+  },
+  {
+    path: "/main-menu",
+    element: <MainMenu />,
   },
   {
     path: "/game",

@@ -173,7 +173,21 @@ export interface FreeCompanyModel {
     players: PlayerSummaryModel[];
 }
 
-export interface PlayerSummaryModel {
+export interface CreatePlayerModel {
     name: string;
     class: Class;
+}
+
+export interface PlayerSummaryModel extends CreatePlayerModel {
+    id: number;
+}
+
+export interface CreateFreeCompanyModel {
+    playerId: number;
+    name: string;
+}
+
+export interface JoinFreeCompanyModel {
+    playerId: number;
+    code: string;
 }

@@ -15,6 +15,18 @@ using Oathsworn.Infrastructure;
 
 namespace Oathsworn.Business
 {
+    public interface IGame
+    {
+        int StartEncounter(string freeCompanyCode, int encounterNumber);
+        AttackResponseModel StartAttack(int encounterId, AttackModel attackModel);
+        AttackResponseModel RerollAttack(int encounterId, RerollModel rerollModel);
+        Task CompleteAttack(int encounterId, int attackId);
+        Task Move(int encounterId, MoveModel moveModel);
+        Task SpendToken(int encounterId, SpendTokenModel spendTokenModel);
+        Task EndTurn(int encounterId);
+        Task ContinueEnemyAction(int encounterId);
+    }
+
     public class Game : IGame
     {
         private readonly IDatabaseRepository<Encounter> _encounters;
@@ -63,7 +75,8 @@ namespace Oathsworn.Business
         {
             var freeCompany = _freeCompanies.ReadOne(x => x.Code == freeCompanyCode, x => x.Players);
 
-            if (freeCompany.Players.Count != 4) {
+            if (freeCompany.Players.Count != 4)
+            {
                 throw new ErrorMessageException("Free company does not have enough players");
             }
 

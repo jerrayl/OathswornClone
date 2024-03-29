@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { AttackModel, MoveModel, RerollModel } from './apiModels';
+import { AttackModel, CreateFreeCompanyModel, CreatePlayerModel, EncounterModel, FreeCompanyModel, JoinFreeCompanyModel, MoveModel, PlayerSummaryModel, RerollModel } from './apiModels';
 import { ENCOUNTER_ID } from '../Game/utils/constants';
 
 axios.defaults.withCredentials = true;
@@ -11,13 +11,27 @@ const api = axios.create({
 });
 
 export const getPlayers = async () => {
-    return (await api.get(`players`)).data;
+    return (await api.get<PlayerSummaryModel[]>(`players`)).data;
 }
+
 export const getFreeCompanies = async () => {
-    return (await api.get(`free-companies`)).data;
+    return (await api.get<FreeCompanyModel[]>(`free-companies`)).data;
 }
+
 export const getEncounters = async () => {
-    return (await api.get(`encounters`)).data;
+    return (await api.get<EncounterModel[]>(`encounters`)).data;
+}
+
+export const createPlayer = async (model: CreatePlayerModel) => {
+    return (await api.post(`create-player`, model)).data;
+}
+
+export const createFreeCompany = async (model: CreateFreeCompanyModel) => {
+    return (await api.post(`create-free-company`, model)).data;
+}
+
+export const joinFreeCompany = async (model: JoinFreeCompanyModel) => {
+    return (await api.post(`join-free-company`, model)).data;
 }
 
 export const startAttack = async (model: AttackModel) => {

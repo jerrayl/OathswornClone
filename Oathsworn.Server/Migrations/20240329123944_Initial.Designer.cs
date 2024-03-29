@@ -8,17 +8,17 @@ using Oathsworn;
 
 #nullable disable
 
-namespace Oathsworn.Migrations
+namespace Oathsworn.Server.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20231124121520_Initial")]
+    [Migration("20240329123944_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.12");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.2");
 
             modelBuilder.Entity("Oathsworn.Entities.Attack", b =>
                 {
@@ -72,7 +72,7 @@ namespace Oathsworn.Migrations
 
                     b.HasIndex("MinionId");
 
-                    b.ToTable("AttackMinion");
+                    b.ToTable("AttackMinions");
                 });
 
             modelBuilder.Entity("Oathsworn.Entities.Boss", b =>
@@ -195,6 +195,9 @@ namespace Oathsworn.Migrations
                     b.Property<int?>("CharacterPerformingAction")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("DateStarted")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("Encounters");
@@ -262,6 +265,10 @@ namespace Oathsworn.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -386,7 +393,7 @@ namespace Oathsworn.Migrations
                     b.Property<int>("Defence")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("FreeCompanyId")
+                    b.Property<int?>("FreeCompanyId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Health")
@@ -399,9 +406,18 @@ namespace Oathsworn.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FreeCompanyId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Players");
                 });
@@ -450,6 +466,21 @@ namespace Oathsworn.Migrations
                     b.HasIndex("PlayerId");
 
                     b.ToTable("PlayerItems");
+                });
+
+            modelBuilder.Entity("Oathsworn.Entities.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Oathsworn.Entities.Attack", b =>
@@ -609,8 +640,12 @@ namespace Oathsworn.Migrations
             modelBuilder.Entity("Oathsworn.Entities.Player", b =>
                 {
                     b.HasOne("Oathsworn.Entities.FreeCompany", "FreeCompany")
-                        .WithMany()
-                        .HasForeignKey("FreeCompanyId")
+                        .WithMany("Players")
+                        .HasForeignKey("FreeCompanyId");
+
+                    b.HasOne("Oathsworn.Entities.User", null)
+                        .WithMany("Players")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -679,6 +714,11 @@ namespace Oathsworn.Migrations
                     b.Navigation("MightCards");
                 });
 
+            modelBuilder.Entity("Oathsworn.Entities.FreeCompany", b =>
+                {
+                    b.Navigation("Players");
+                });
+
             modelBuilder.Entity("Oathsworn.Entities.Player", b =>
                 {
                     b.Navigation("Attacks");
@@ -689,6 +729,11 @@ namespace Oathsworn.Migrations
                     b.Navigation("PlayerAbilities");
 
                     b.Navigation("PlayerItems");
+                });
+
+            modelBuilder.Entity("Oathsworn.Entities.User", b =>
+                {
+                    b.Navigation("Players");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Oathsworn.Migrations
+namespace Oathsworn.Server.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -16,6 +17,7 @@ namespace Oathsworn.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    DateStarted = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CharacterPerformingAction = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
@@ -29,7 +31,8 @@ namespace Oathsworn.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Code = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,6 +54,19 @@ namespace Oathsworn.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Items", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Email = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -103,7 +119,9 @@ namespace Oathsworn.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    FreeCompanyId = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    FreeCompanyId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
                     Class = table.Column<int>(type: "INTEGER", nullable: false),
                     Health = table.Column<int>(type: "INTEGER", nullable: false),
                     Defence = table.Column<int>(type: "INTEGER", nullable: false),
@@ -118,6 +136,11 @@ namespace Oathsworn.Migrations
                         name: "FK_Players_FreeCompanies_FreeCompanyId",
                         column: x => x.FreeCompanyId,
                         principalTable: "FreeCompanies",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Players_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -305,7 +328,7 @@ namespace Oathsworn.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AttackMinion",
+                name: "AttackMinions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -315,15 +338,15 @@ namespace Oathsworn.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AttackMinion", x => x.Id);
+                    table.PrimaryKey("PK_AttackMinions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AttackMinion_Attacks_AttackId",
+                        name: "FK_AttackMinions_Attacks_AttackId",
                         column: x => x.AttackId,
                         principalTable: "Attacks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AttackMinion_Minons_MinionId",
+                        name: "FK_AttackMinions_Minons_MinionId",
                         column: x => x.MinionId,
                         principalTable: "Minons",
                         principalColumn: "Id",
@@ -392,13 +415,13 @@ namespace Oathsworn.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AttackMinion_AttackId",
-                table: "AttackMinion",
+                name: "IX_AttackMinions_AttackId",
+                table: "AttackMinions",
                 column: "AttackId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AttackMinion_MinionId",
-                table: "AttackMinion",
+                name: "IX_AttackMinions_MinionId",
+                table: "AttackMinions",
                 column: "MinionId");
 
             migrationBuilder.CreateIndex(
@@ -497,13 +520,18 @@ namespace Oathsworn.Migrations
                 name: "IX_Players_FreeCompanyId",
                 table: "Players",
                 column: "FreeCompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Players_UserId",
+                table: "Players",
+                column: "UserId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AttackMinion");
+                name: "AttackMinions");
 
             migrationBuilder.DropTable(
                 name: "BossActions");
@@ -549,6 +577,9 @@ namespace Oathsworn.Migrations
 
             migrationBuilder.DropTable(
                 name: "FreeCompanies");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

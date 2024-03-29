@@ -61,6 +61,7 @@ namespace Oathsworn
         }
 
         public DbSet<Attack> Attacks { get; set; }
+        public DbSet<AttackMinion> AttackMinions { get; set; }
         public DbSet<Boss> Bosses { get; set; }
         public DbSet<BossAction> BossActions { get; set; }
         public DbSet<BossAttack> BossAttacks { get; set; }
@@ -75,5 +76,6 @@ namespace Oathsworn
         public DbSet<Player> Players { get; set; }
         public DbSet<PlayerAbility> PlayerAbilities { get; set; }
         public DbSet<PlayerItem> PlayerItems { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

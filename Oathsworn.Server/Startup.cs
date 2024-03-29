@@ -32,6 +32,7 @@ namespace Oathsworn
             services.AddTransient<GoogleJwtBearerHandler>();
             services.AddScoped<IUserContextFactory, UserContextFactory>();
             services.AddScoped(sp => sp.GetRequiredService<IUserContextFactory>().UserContext);
+            services.AddScoped<IUserManagement, UserManagement>();
             services.AddScoped<IGame, Game>();
             services.AddScoped<IMightCardsService, MightCardsService>();
             services.AddScoped<INotificationService, NotificationService>();
@@ -50,6 +51,8 @@ namespace Oathsworn
             services.AddCors();
 
             services.AddSignalR();
+
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Startup>());
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddScheme<JwtBearerOptions, GoogleJwtBearerHandler>(JwtBearerDefaults.AuthenticationScheme, options => { });
