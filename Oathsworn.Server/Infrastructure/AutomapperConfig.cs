@@ -2,7 +2,7 @@
 using AutoMapper;
 using Oathsworn.Models;
 
-namespace Oathsworn.AutoMapper
+namespace Oathsworn.Infrastructure
 {
     public class AutoMapperProfileConfiguration : Profile
     {
@@ -14,6 +14,7 @@ namespace Oathsworn.AutoMapper
         protected AutoMapperProfileConfiguration(string profileName)
         : base(profileName)
         {
+            CreateMap<Player, PlayerSummaryModel>();
             CreateMap<MightCard, MightCardModel>();
             CreateMap<EncounterPlayer, PlayerModel>()
                 .ForMember(dest => dest.Class, m => m.MapFrom(src => src.Player.Class))

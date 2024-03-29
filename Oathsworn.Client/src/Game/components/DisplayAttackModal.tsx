@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import { CharacterType, DisplayAttackModel } from "../utils/apiModels";
+import { CharacterType, DisplayAttackModel } from "../../utils/apiModels";
 import { Button } from "./shared/Button";
 import { MightCardDisplay } from "./shared/MightCardDisplay";
 

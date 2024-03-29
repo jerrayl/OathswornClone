@@ -1,5 +1,5 @@
 import { Observer } from "mobx-react";
-import { BOARD, BOARD_MAPPING } from "../utils/constants";
+import { BOARD, BOARD_MAPPING } from "../Game/utils/constants";
 import { EncounterBuilderStore } from "./EncounterBuilderStore";
 
 export const EncounterBuilder = () => {

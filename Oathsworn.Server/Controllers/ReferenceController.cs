@@ -4,7 +4,6 @@ using Oathsworn.Models;
 
 namespace Oathsworn.Controllers
 {
-    [Route("api")]
     public class ReferenceController : Controller
     {
         // Fake endpoints to get models into NSwag
@@ -14,6 +13,24 @@ namespace Oathsworn.Controllers
         [ProducesResponseType(StatusCodes.Status418ImATeapot)]
         [ApiExplorerSettings(GroupName = "Reference")]
         public IActionResult GameState([FromBody] GameStateModel model)
+        {
+            return new StatusCodeResult(418);
+        }
+
+        [HttpPost]
+        [Route("encounter")]
+        [ProducesResponseType(StatusCodes.Status418ImATeapot)]
+        [ApiExplorerSettings(GroupName = "Reference")]
+        public IActionResult Encounter([FromBody] EncounterModel model)
+        {
+            return new StatusCodeResult(418);
+        }
+
+        [HttpPost]
+        [Route("free-company")]
+        [ProducesResponseType(StatusCodes.Status418ImATeapot)]
+        [ApiExplorerSettings(GroupName = "Reference")]
+        public IActionResult FreeCompany([FromBody] FreeCompanyModel model)
         {
             return new StatusCodeResult(418);
         }

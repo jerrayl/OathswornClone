@@ -1,5 +1,5 @@
 import { IObservableArray, makeAutoObservable, observable } from "mobx";
-import { ContainsPosition, Equal } from "../utils/gridHelper";
+import { ContainsPosition, Equal } from "../Game/utils/gridHelper";
 import { Position } from "../utils/apiModels";
 
 export class EncounterBuilderStore {

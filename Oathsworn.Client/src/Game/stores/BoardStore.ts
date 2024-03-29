@@ -1,12 +1,12 @@
 import { IObservableArray, makeAutoObservable, observable } from "mobx";
 import { ContainsPosition, Equal, GetAllNearest, IsAdjacent } from "../utils/gridHelper";
-import { CharacterType, GameStateModel, Position } from "../utils/apiModels";
-import { continueEnemyAction, endTurn, move } from "../utils/api";
+import { CharacterType, GameStateModel, Position } from "../../utils/apiModels";
+import { continueEnemyAction, endTurn, move } from "../../utils/api";
 import { AttackStore } from "./AttackStore";
 import { TileOccupant } from "../utils/types";
-import { classIconMap } from "../assets/icons/ClassIcons";
-import { borderIconMap } from "../assets/icons/BorderIcons";
-import { bossIconMap } from "../assets/icons/BossIcons";
+import { classIconMap } from "../../assets/icons/ClassIcons";
+import { borderIconMap } from "../../assets/icons/BorderIcons";
+import { bossIconMap } from "../../assets/icons/BossIcons";
 
 export class BoardStore {
   getGameState: () => GameStateModel;

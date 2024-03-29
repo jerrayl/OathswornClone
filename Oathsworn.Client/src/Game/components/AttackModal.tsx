@@ -1,9 +1,9 @@
 import { observer } from "mobx-react";
-import chevronUp from "../assets/icons/chevron-up.svg";
-import chevronDown from "../assets/icons/chevron-down.svg";
-import { tokenIconMap } from "../assets/icons/TokenIcons";
+import chevronUp from "../../assets/icons/chevron-up.svg";
+import chevronDown from "../../assets/icons/chevron-down.svg";
+import { tokenIconMap } from "../../assets/icons/TokenIcons";
 import { AttackStore } from "../stores/AttackStore";
-import { Might, Token } from "../utils/apiModels";
+import { Might, Token } from "../../utils/apiModels";
 import { Button } from "./shared/Button";
 import { COLORS, formatBossPart } from "../utils/constants";
 import { MightCardDisplay } from "./shared/MightCardDisplay";

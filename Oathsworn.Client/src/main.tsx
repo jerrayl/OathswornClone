@@ -1,13 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
 import './index.css'
+import "./App.css";
 import { EncounterBuilder } from './EncounterBuilder/EncounterBuilder.tsx';
 import { SplashScreen } from './SplashScreen/SplashScreen.tsx';
+import { Game } from './Game/components/Game.tsx'
 
 const router = createBrowserRouter([
   {
@@ -16,7 +17,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/game",
-    element: <App />,
+    element: <Game />,
   },
   {
     path: "/encounter-builder",

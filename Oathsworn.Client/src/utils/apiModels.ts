@@ -10,24 +10,14 @@
 
 
 
-export interface CreatePlayerModel {
-    freeCompanyId: number;
-    class: Class;
-}
+export interface ProblemDetails {
+    type: string;
+    title: string;
+    status: number;
+    detail: string;
+    instance: string;
 
-export enum Class {
-    Warbear = <any>"Warbear",
-    Exile = <any>"Exile",
-    Cur = <any>"Cur",
-    Priest = <any>"Priest",
-    Harbinger = <any>"Harbinger",
-    Blade = <any>"Blade",
-    Witch = <any>"Witch",
-    Ranger = <any>"Ranger",
-    Warden = <any>"Warden",
-    Huntress = <any>"Huntress",
-    Penitent = <any>"Penitent",
-    GroveMaiden = <any>"GroveMaiden",
+    [key: string]: any;
 }
 
 export interface MoveModel {
@@ -83,6 +73,7 @@ export interface GameStateModel {
 
 export interface PlayerModel {
     id: number;
+    name: string;
     class: Class;
     defence: number;
     maxAnimus: number;
@@ -93,6 +84,21 @@ export interface PlayerModel {
     currentHealth: number;
     currentAnimus: number;
     tokens: { [key: string]: number; };
+}
+
+export enum Class {
+    Warbear = <any>"Warbear",
+    Exile = <any>"Exile",
+    Cur = <any>"Cur",
+    Priest = <any>"Priest",
+    Harbinger = <any>"Harbinger",
+    Blade = <any>"Blade",
+    Witch = <any>"Witch",
+    Ranger = <any>"Ranger",
+    Warden = <any>"Warden",
+    Huntress = <any>"Huntress",
+    Penitent = <any>"Penitent",
+    GroveMaiden = <any>"GroveMaiden",
 }
 
 export interface BossModel {
@@ -153,4 +159,21 @@ export interface MightCardModel {
     type: Might;
     isCritical: boolean;
     isDrawnFromCritical: boolean;
+}
+
+export interface EncounterModel {
+    encounterId: number;
+    encounterNumber: number;
+    freeCompanyName: string;
+    dateStarted: Date;
+}
+
+export interface FreeCompanyModel {
+    name: string;
+    players: PlayerSummaryModel[];
+}
+
+export interface PlayerSummaryModel {
+    name: string;
+    class: Class;
 }

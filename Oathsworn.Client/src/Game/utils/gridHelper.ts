@@ -1,4 +1,4 @@
-import { Position } from "./apiModels";
+import { Position } from "../../utils/apiModels";
 
 const COORDINATE_MAX_VALUE = 8;
 const COORDINATE_MIN_VALUE = COORDINATE_MAX_VALUE * -1;

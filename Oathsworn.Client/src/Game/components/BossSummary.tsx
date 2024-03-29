@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import { BossModel } from "../utils/apiModels";
+import { BossModel } from "../../utils/apiModels";
 import { MightDisplay } from "./shared/MightDisplay";
 import { HealthDice } from "./shared/HealthDice";
 import { DefenceDisplay } from "./shared/DefenceDisplay";

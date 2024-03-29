@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -6,10 +7,10 @@ using Microsoft.Extensions.Hosting;
 using Oathsworn.Database;
 using Oathsworn.Business;
 using Oathsworn.Repositories;
-using Oathsworn.AutoMapper;
 using Oathsworn.SignalR;
 using Oathsworn.Business.Services;
 using Oathsworn.Business.Bosses;
+using Oathsworn.Infrastructure;
 
 namespace Oathsworn
 {
@@ -28,6 +29,9 @@ namespace Oathsworn
 
             services.AddDbContext<DatabaseContext>();
 
+            services.AddTransient<GoogleJwtBearerHandler>();
+            services.AddScoped<IUserContextFactory, UserContextFactory>();
+            services.AddScoped(sp => sp.GetRequiredService<IUserContextFactory>().UserContext);
             services.AddScoped<IGame, Game>();
             services.AddScoped<IMightCardsService, MightCardsService>();
             services.AddScoped<INotificationService, NotificationService>();
@@ -46,6 +50,9 @@ namespace Oathsworn
             services.AddCors();
 
             services.AddSignalR();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddScheme<JwtBearerOptions, GoogleJwtBearerHandler>(JwtBearerDefaults.AuthenticationScheme, options => { });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -71,6 +78,10 @@ namespace Oathsworn
             app.UseRouting();
 
             app.UseStaticFiles();
+
+            app.UseAuthentication();
+            app.UseUserContext();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

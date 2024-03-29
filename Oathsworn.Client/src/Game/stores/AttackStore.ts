@@ -1,6 +1,6 @@
 import { IObservableArray, makeAutoObservable, observable } from "mobx";
-import { completeAttack, rerollAttack, startAttack } from "../utils/api";
-import { Might, PlayerModel, Position } from "../utils/apiModels";
+import { completeAttack, rerollAttack, startAttack } from "../../utils/api";
+import { Might, PlayerModel, Position } from "../../utils/apiModels";
 import { MightCard } from "../utils/types";
 
 export class AttackStore {

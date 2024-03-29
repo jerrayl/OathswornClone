@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
-import { classIconMap } from "../assets/icons/ClassIcons";
-import { tokenIconMap } from "../assets/icons/TokenIcons";
-import { PlayerModel, Token } from "../utils/apiModels";
+import { classIconMap } from "../../assets/icons/ClassIcons";
+import { tokenIconMap } from "../../assets/icons/TokenIcons";
+import { PlayerModel, Token } from "../../utils/apiModels";
 import { MightDisplay } from "./shared/MightDisplay";
 import { HealthDice } from "./shared/HealthDice";
 import { DefenceDisplay } from "./shared/DefenceDisplay";

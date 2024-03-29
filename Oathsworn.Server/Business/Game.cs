@@ -11,6 +11,7 @@ using Oathsworn.Business.Constants;
 using Oathsworn.Business.Helpers;
 using Oathsworn.Business.Services;
 using System.Threading.Tasks;
+using Oathsworn.Infrastructure;
 
 namespace Oathsworn.Business
 {
@@ -58,9 +59,66 @@ namespace Oathsworn.Business
             _bossFactory = bossFactory;
         }
 
-        public void CreatePlayer(CreatePlayerModel moveModel)
+        public int StartEncounter(string freeCompanyCode, int encounterNumber)
         {
-            throw new NotImplementedException();
+            var freeCompany = _freeCompanies.ReadOne(x => x.Code == freeCompanyCode, x => x.Players);
+
+            if (freeCompany.Players.Count != 4) {
+                throw new ErrorMessageException("Free company does not have enough players");
+            }
+
+            var encounter = new Encounter();
+            _encounters.Add(encounter);
+
+            foreach (var index in Enumerable.Range(0, 4))
+            {
+                var encounterPlayer = DefaultPlayers.EncounterPlayers[index];
+                encounterPlayer.EncounterId = encounter.Id;
+                encounterPlayer.PlayerId = freeCompany.Players[index].Id;
+                _encounterPlayers.Add(encounterPlayer);
+            }
+
+            var playerDeck = new EncounterMightDeck()
+            {
+                EncounterId = encounter.Id,
+                IsFreeCompanyDeck = true
+            };
+            _encounterMightDecks.Add(playerDeck);
+
+            var enemyDeck = new EncounterMightDeck()
+            {
+                EncounterId = encounter.Id,
+                IsFreeCompanyDeck = false
+            };
+            _encounterMightDecks.Add(enemyDeck);
+
+            var playerMightCards = MightCardsDistribution.MIGHT_CARDS
+                .Select(x => new MightCard
+                {
+                    Type = x.Type,
+                    Value = x.Value,
+                    IsCritical = x.IsCritical,
+                    DeckId = playerDeck.Id
+                })
+                .ToList();
+            playerMightCards.Shuffle();
+            _mightCards.AddBatch(playerMightCards);
+
+            var enemyMightCards = MightCardsDistribution.MIGHT_CARDS
+                .Select(x => new MightCard
+                {
+                    Type = x.Type,
+                    Value = x.Value,
+                    IsCritical = x.IsCritical,
+                    DeckId = enemyDeck.Id
+                })
+                .ToList();
+            enemyMightCards.Shuffle();
+            _mightCards.AddBatch(enemyMightCards);
+
+            _bossFactory.CreateBossByNumber(encounterNumber, encounter.Id);
+
+            return encounter.Id;
         }
 
         public async Task Move(int encounterId, MoveModel moveModel)
@@ -69,7 +127,7 @@ namespace Oathsworn.Business
 
             if (player is null)
             {
-                throw new Exception("Player not found");
+                throw new ErrorMessageException("Player not found");
             }
 
             if (GridHelper.IsValidPath(new List<IPosition>() { player }.Concat(moveModel.Positions).ToList()) && player.CurrentAnimus >= moveModel.Positions.Count)
@@ -90,7 +148,7 @@ namespace Oathsworn.Business
 
             if (player is null)
             {
-                throw new Exception("Player not found");
+                throw new ErrorMessageException("Player not found");
             }
 
             if (spendTokenModel.Token == Token.Animus && player.Tokens[Token.Animus] > 0)
@@ -114,7 +172,7 @@ namespace Oathsworn.Business
 
             if (attack is null)
             {
-                throw new Exception("Attack not found");
+                throw new ErrorMessageException("Attack not found");
             }
 
             if (attack.MightCards.Count(x => !x.IsDrawnFromCritical && x.Value == 0) > GlobalConstants.NUM_ZEROES_TO_MISS)
@@ -148,18 +206,18 @@ namespace Oathsworn.Business
 
             if (attack is null)
             {
-                throw new Exception("Attack not found");
+                throw new ErrorMessageException("Attack not found");
             }
 
             var mightCardIds = attack.MightCards.Select(x => x.Id);
             if (rerollModel.MightCards.Any(x => !mightCardIds.Contains(x)))
             {
-                throw new Exception("Card ids not found");
+                throw new ErrorMessageException("Card ids not found");
             }
 
             if (rerollModel.RerollTokensUsed < 1 || attack.Player.EncounterPlayer.Tokens[Token.Redraw] < rerollModel.RerollTokensUsed || rerollModel.MightCards.Count != rerollModel.RerollTokensUsed)
             {
-                throw new Exception("Invalid number of reroll tokens");
+                throw new ErrorMessageException("Invalid number of reroll tokens");
             }
 
             attack.RerollTokensUsed += rerollModel.RerollTokensUsed;
@@ -209,7 +267,7 @@ namespace Oathsworn.Business
 
             if (player is null || player.Attacks.Any())
             {
-                throw new Exception("Invalid player id");
+                throw new ErrorMessageException("Invalid player id");
             }
 
             // Locate Player (in encounter)
@@ -218,19 +276,20 @@ namespace Oathsworn.Business
 
             if (attackModel.Might.Values.Sum() > GlobalConstants.MAXIMUM_ATTACK_MIGHT_CARDS)
             {
-                throw new Exception("Too many might cards");
+                throw new ErrorMessageException("Too many might cards");
             }
 
             if (MightCardsHelper.GetEmpowerTokensNeeded(attackModel.Might, player.Might) != attackModel.EmpowerTokensUsed)
             {
-                throw new Exception("Invalid number of empower tokens");
+                throw new ErrorMessageException("Invalid number of empower tokens");
             }
 
             // Assume that boss is the target
             var bossEntity = _bosses.ReadOne(x => x.EncounterId == encounterId);
             var boss = _bossFactory.GetBossInstance(bossEntity);
-            if (!boss.GetBossPositions().Any(x => x.EqualTo(attackModel.Target))){
-                throw new Exception("Boss is not targeted");
+            if (!boss.GetBossPositions().Any(x => x.EqualTo(attackModel.Target)))
+            {
+                throw new ErrorMessageException("Boss is not targeted");
             }
 
             // Calculate bonus damage that would be done
@@ -283,11 +342,11 @@ namespace Oathsworn.Business
 
             if (encounter is null || encounter.CharacterPerformingAction is not null)
             {
-                throw new Exception("Invalid encounter state");
+                throw new ErrorMessageException("Invalid encounter state");
             }
 
             _bossFactory.GetBossInstance(encounter.Boss).BeginAction();
-            
+
             await _notificationService.UpdateGameState(encounterId);
         }
 
@@ -298,74 +357,12 @@ namespace Oathsworn.Business
 
             if (encounter is null || encounter.CharacterPerformingAction != CharacterType.Boss)
             {
-                throw new Exception("Invalid encounter state");
+                throw new ErrorMessageException("Invalid encounter state");
             }
 
             _bossFactory.GetBossInstance(encounter.Boss).PerformAction();
 
             await _notificationService.UpdateGameState(encounterId);
-        }
-
-        public int StartEncounter()
-        {
-            var encounter = new Encounter();
-            _encounters.Add(encounter);
-
-            var playerDeck = new EncounterMightDeck()
-            {
-                EncounterId = encounter.Id,
-                IsFreeCompanyDeck = true
-            };
-            _encounterMightDecks.Add(playerDeck);
-
-            var enemyDeck = new EncounterMightDeck()
-            {
-                EncounterId = encounter.Id,
-                IsFreeCompanyDeck = false
-            };
-            _encounterMightDecks.Add(enemyDeck);
-
-            var playerMightCards = MightCardsDistribution.MIGHT_CARDS
-                .Select(x => new MightCard
-                {
-                    Type = x.Type,
-                    Value = x.Value,
-                    IsCritical = x.IsCritical,
-                    DeckId = playerDeck.Id
-                })
-                .ToList();
-            playerMightCards.Shuffle();
-            _mightCards.AddBatch(playerMightCards);
-
-            var enemyMightCards = MightCardsDistribution.MIGHT_CARDS
-                .Select(x => new MightCard
-                {
-                    Type = x.Type,
-                    Value = x.Value,
-                    IsCritical = x.IsCritical,
-                    DeckId = enemyDeck.Id
-                })
-                .ToList();
-            enemyMightCards.Shuffle();
-            _mightCards.AddBatch(enemyMightCards);
-
-            var freeCompany = new FreeCompany() { Name = "Test Free Company" };
-            _freeCompanies.Add(freeCompany);
-
-            foreach (var index in Enumerable.Range(0, 4))
-            {
-                var player = DefaultPlayers.Players[index];
-                player.FreeCompanyId = freeCompany.Id;
-                _players.Add(player);
-                var encounterPlayer = DefaultPlayers.EncounterPlayers[index];
-                encounterPlayer.EncounterId = encounter.Id;
-                encounterPlayer.PlayerId = player.Id;
-                _encounterPlayers.Add(encounterPlayer);
-            }
-
-            _bossFactory.CreateBossByNumber(1, encounter.Id);
-
-            return encounter.Id;
         }
     }
 }

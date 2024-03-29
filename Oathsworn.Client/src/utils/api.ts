@@ -1,13 +1,24 @@
 import axios from 'axios';
 import { AttackModel, MoveModel, RerollModel } from './apiModels';
-import { ENCOUNTER_ID } from './constants';
+import { ENCOUNTER_ID } from '../Game/utils/constants';
 
+axios.defaults.withCredentials = true;
 const api = axios.create({
     baseURL: 'api/',
     headers: {
         'Content-Type': 'application/json',
     },
 });
+
+export const getPlayers = async () => {
+    return (await api.get(`players`)).data;
+}
+export const getFreeCompanies = async () => {
+    return (await api.get(`free-companies`)).data;
+}
+export const getEncounters = async () => {
+    return (await api.get(`encounters`)).data;
+}
 
 export const startAttack = async (model: AttackModel) => {
     return (await api.post(`start-attack?encounterId=${ENCOUNTER_ID}`, model)).data;

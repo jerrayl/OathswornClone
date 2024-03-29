@@ -5,43 +5,55 @@ namespace Oathsworn.Business.Constants
 {
     public static class DefaultPlayers
     {
-        public static readonly List<Player> Players = new()
+        public static readonly Dictionary<Class, Player> Players = new()
         {
-            new Player()
             {
-                Class = Class.Witch,
-                Health = 5,
-                Defence = 2,
-                MaxAnimus = 8,
-                AnimusRegen = 6,
-                Might = new Dictionary<Might, int>() { { Might.White, 0 }, { Might.Yellow, 0 }, { Might.Red, 1 }, { Might.Black, 0 } }
+                Class.Witch,
+                new ()
+                {
+                    Class = Class.Witch,
+                    Health = 5,
+                    Defence = 2,
+                    MaxAnimus = 8,
+                    AnimusRegen = 6,
+                    Might = new Dictionary<Might, int>() { { Might.White, 0 }, { Might.Yellow, 0 }, { Might.Red, 1 }, { Might.Black, 0 } }
+                }
             },
-            new Player()
             {
-                Class = Class.Huntress,
-                Health = 5,
-                Defence = 2,
-                MaxAnimus = 8,
-                AnimusRegen = 6,
-                Might = new Dictionary<Might, int>() { { Might.White, 0 }, { Might.Yellow, 2 }, { Might.Red, 0 }, { Might.Black, 0 } }
+                Class.Huntress,
+                new ()
+                {
+                    Class = Class.Huntress,
+                    Health = 5,
+                    Defence = 2,
+                    MaxAnimus = 8,
+                    AnimusRegen = 6,
+                    Might = new Dictionary<Might, int>() { { Might.White, 0 }, { Might.Yellow, 2 }, { Might.Red, 0 }, { Might.Black, 0 } }
+                }
             },
-            new Player()
             {
-                Class = Class.Warden,
-                Health = 5,
-                Defence = 4,
-                MaxAnimus = 8,
-                AnimusRegen = 6,
-                Might = new Dictionary<Might, int>() { { Might.White, 0 }, { Might.Yellow, 1 }, { Might.Red, 0 }, { Might.Black, 0 } }
+                Class.Warden,
+                new ()
+                {
+                    Class = Class.Warden,
+                    Health = 5,
+                    Defence = 4,
+                    MaxAnimus = 8,
+                    AnimusRegen = 6,
+                    Might = new Dictionary<Might, int>() { { Might.White, 0 }, { Might.Yellow, 1 }, { Might.Red, 0 }, { Might.Black, 0 } }
+                }
             },
-            new Player()
             {
-                Class = Class.Penitent,
-                Health = 5,
-                Defence = 4,
-                MaxAnimus = 8,
-                AnimusRegen = 6,
-                Might = new Dictionary<Might, int>() { { Might.White, 0 }, { Might.Yellow, 1 }, { Might.Red, 0 }, { Might.Black, 0 } }
+                Class.Penitent,
+                new ()
+                {
+                    Class = Class.Penitent,
+                    Health = 5,
+                    Defence = 4,
+                    MaxAnimus = 8,
+                    AnimusRegen = 6,
+                    Might = new Dictionary<Might, int>() { { Might.White, 0 }, { Might.Yellow, 1 }, { Might.Red, 0 }, { Might.Black, 0 } }
+                }
             }
         };
 

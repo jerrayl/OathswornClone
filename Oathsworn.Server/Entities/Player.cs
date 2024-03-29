@@ -4,7 +4,9 @@ namespace Oathsworn.Entities
 {
     public class Player : BaseEntity
     {
-        public int FreeCompanyId { get; set; }
+        public int UserId { get; set; }
+        public int? FreeCompanyId { get; set; }
+        public string Name { get; set; }
         public Class Class { get; set; }
         public int Health { get; set; }
         public int Defence { get; set; }

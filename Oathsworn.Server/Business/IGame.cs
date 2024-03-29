@@ -5,9 +5,7 @@ namespace Oathsworn.Business
 {
     public interface IGame
     {
-        int StartEncounter();
-        void CreatePlayer(CreatePlayerModel createPlayerModel);
-
+        int StartEncounter(string freeCompanyCode, int encounterNumber);
         AttackResponseModel StartAttack(int encounterId, AttackModel attackModel);
         AttackResponseModel RerollAttack (int encounterId, RerollModel rerollModel);
         Task CompleteAttack(int encounterId, int attackId);
