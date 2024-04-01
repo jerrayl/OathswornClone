@@ -640,13 +640,15 @@ namespace Oathsworn.Server.Migrations
                         .WithMany("Players")
                         .HasForeignKey("FreeCompanyId");
 
-                    b.HasOne("Oathsworn.Entities.User", null)
+                    b.HasOne("Oathsworn.Entities.User", "User")
                         .WithMany("Players")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("FreeCompany");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Oathsworn.Entities.PlayerAbility", b =>

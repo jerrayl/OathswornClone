@@ -14,6 +14,7 @@ namespace Oathsworn.Entities
         public int AnimusRegen { get; set; }
         public Dictionary<Might, int> Might { get; set; }
 
+        public virtual User User { get; set; }
         public virtual FreeCompany FreeCompany { get; set; }
         public virtual EncounterPlayer EncounterPlayer { get; set; }
         public virtual List<PlayerItem> PlayerItems { get; set; }

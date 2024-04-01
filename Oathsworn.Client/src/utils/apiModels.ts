@@ -169,6 +169,7 @@ export interface EncounterModel {
 }
 
 export interface FreeCompanyModel {
+    code: string;
     name: string;
     players: PlayerSummaryModel[];
 }
@@ -180,6 +181,7 @@ export interface CreatePlayerModel {
 
 export interface PlayerSummaryModel extends CreatePlayerModel {
     id: number;
+    userEmail: string;
 }
 
 export interface CreateFreeCompanyModel {

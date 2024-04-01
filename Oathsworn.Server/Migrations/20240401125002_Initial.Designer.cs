@@ -11,7 +11,7 @@ using Oathsworn;
 namespace Oathsworn.Server.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240329123944_Initial")]
+    [Migration("20240401125002_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -643,13 +643,15 @@ namespace Oathsworn.Server.Migrations
                         .WithMany("Players")
                         .HasForeignKey("FreeCompanyId");
 
-                    b.HasOne("Oathsworn.Entities.User", null)
+                    b.HasOne("Oathsworn.Entities.User", "User")
                         .WithMany("Players")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("FreeCompany");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Oathsworn.Entities.PlayerAbility", b =>

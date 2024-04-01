@@ -9,5 +9,6 @@ namespace Oathsworn.Models
     public class PlayerSummaryModel : CreatePlayerModel
     {
         public int Id { get; set; }
+        public string UserEmail { get; set; }
     }
 }

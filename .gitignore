@@ -2,3 +2,6 @@
 .vs
 obj
 bin
+Oathsworn.Server/Oathsworn.Server.csproj.user
+Oathsworn.Server/Properties/launchSettings.json
+Oathsworn.Client/src/utils/apiModels.ts

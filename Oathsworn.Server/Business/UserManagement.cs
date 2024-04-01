@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using Oathsworn.Entities;
@@ -17,7 +16,7 @@ namespace Oathsworn.Business
         List<FreeCompanyModel> GetFreeCompanies();
         List<PlayerSummaryModel> GetPlayers();
 
-        void CreatePlayer(PlayerSummaryModel model);
+        void CreatePlayer(CreatePlayerModel model);
         void CreateFreeCompany(CreateFreeCompanyModel model);
         void JoinFreeCompany(JoinFreeCompanyModel model);
     }
@@ -34,7 +33,7 @@ namespace Oathsworn.Business
         private readonly IDatabaseRepository<Player> _players = players;
         private readonly IMapper _mapper = mapper;
 
-        public void CreatePlayer(PlayerSummaryModel model)
+        public void CreatePlayer(CreatePlayerModel model)
         {
             var player = _mapper.Map<Player>(DefaultPlayers.Players[model.Class]); //Use mapper to clone player
             player.Name = model.Name;
@@ -72,8 +71,8 @@ namespace Oathsworn.Business
         public List<EncounterModel> GetEncounters()
         {
             return _players.Read(x => x.UserId == _userContext.Id, x => x.FreeCompany, x => x.EncounterPlayer.Encounter, x => x.EncounterPlayer.Encounter.Boss)
-                .DistinctBy(x => x.EncounterPlayer.EncounterId)
                 .Where(x => x.EncounterPlayer is not null)
+                .DistinctBy(x => x.EncounterPlayer.EncounterId)
                 .Select(x => new EncounterModel
                 {
                     EncounterId = x.EncounterPlayer.Encounter.Id,
@@ -86,14 +85,15 @@ namespace Oathsworn.Business
 
         public List<FreeCompanyModel> GetFreeCompanies()
         {
-            var freeCompanyIds = _players.Read(x => x.UserId == _userContext.Id)
-                .Select(x => x.FreeCompanyId)
+            var freeCompanies = _players.Read(x => x.UserId == _userContext.Id, x => x.FreeCompany, x => x.User)
                 .Where(x => x is not null)
-                .Distinct();
+                .GroupBy(x => x.FreeCompanyId);
 
-            var freeCompanies = _freeCompanies.Read(x => freeCompanyIds.Contains(x.Id), x => x.Players);
-
-            return freeCompanies.Select(_mapper.Map<FreeCompanyModel>).ToList();
+            return freeCompanies.Select(x => {
+                var freeCompany = _mapper.Map<FreeCompanyModel>(x.First().FreeCompany);
+                freeCompany.Players = x.Select(y => _mapper.Map<PlayerSummaryModel>(y)).ToList();
+                return freeCompany;
+            }).ToList();
         }
 
         public List<PlayerSummaryModel> GetPlayers()

@@ -14,7 +14,8 @@ namespace Oathsworn.Infrastructure
         protected AutoMapperProfileConfiguration(string profileName)
         : base(profileName)
         {
-            CreateMap<Player, PlayerSummaryModel>();
+            CreateMap<Player, PlayerSummaryModel>()
+                .ForMember(dest => dest.UserEmail, m => m.MapFrom(src => src.User.Email));
             CreateMap<FreeCompany, FreeCompanyModel>();
             CreateMap<MightCard, MightCardModel>();
             CreateMap<EncounterPlayer, PlayerModel>()
