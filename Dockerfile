@@ -11,8 +11,6 @@ RUN apt-get update && \
     apt-get install -y nodejs && \
     apt-get clean -y && \
     npm install -g npm
-RUN dotnet tool install --global dotnet-ef
-ENV PATH="$PATH:/root/.dotnet/tools"
 
 FROM with-node AS build
 
@@ -31,9 +29,6 @@ RUN dotnet restore
 COPY . .
 WORKDIR "/src/Oathsworn.Server"
 RUN dotnet build "./Oathsworn.Server.csproj"  -c Release
-
-FROM build as migrations
-ENTRYPOINT dotnet-ef database update
 
 FROM build AS publish
 RUN dotnet publish "./Oathsworn.Server.csproj" -c Release --no-restore --no-build -o /app/publish

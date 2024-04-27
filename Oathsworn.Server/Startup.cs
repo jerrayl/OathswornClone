@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Oathsworn.Database;
 using Oathsworn.Business;
 using Oathsworn.Repositories;
 using Oathsworn.SignalR;
 using Oathsworn.Business.Services;
 using Oathsworn.Business.Bosses;
 using Oathsworn.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace Oathsworn
 {
@@ -98,7 +98,7 @@ namespace Oathsworn
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             using (var dbContext = serviceScope.ServiceProvider.GetService<DatabaseContext>())
             {
-                DatabaseSeed.Seed(dbContext);
+                dbContext.Database.Migrate();
             }
         }
     }
