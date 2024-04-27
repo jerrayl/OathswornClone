@@ -1,0 +1,29 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: azure/docker-login@v1
+      with:
+        login-server: oathsworn.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    - run: |
+        docker build . -t oathsworn.azurecr.io/oathswornclone:$(date +%s)
+        docker push oathsworn.azurecr.io/oathswornclone:$(date +%s)
+    - uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'oathswornclone'
+        publish-profile: ${{ secrets.azureWebAppPublishProfile }}
+        images: 'oathsworn.azurecr.io/oathswornclone:$(date +%s)'
