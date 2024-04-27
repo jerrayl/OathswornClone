@@ -16,6 +16,10 @@ ENV PATH="$PATH:/root/.dotnet/tools"
 
 FROM with-node AS build
 
+# Define build arguments for environment variables
+ARG VITE_GOOGLE_CLIENT_ID
+ENV VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID
+
 WORKDIR /src
 
 COPY *.sln .
