@@ -20,7 +20,7 @@ namespace Oathsworn.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ApiExplorerSettings(GroupName = "UserManagment")]
-        public IActionResult CreatePlayer([FromBody] PlayerSummaryModel model)
+        public IActionResult CreatePlayer([FromBody] CreatePlayerModel model)
         {
             try
             {

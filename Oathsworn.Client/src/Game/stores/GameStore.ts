@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { GameStateModel } from "../utils/apiModels";
+import { GameStateModel } from "../../utils/apiModels";
 import { BoardStore } from "./BoardStore";
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { ENCOUNTER_ID, SIGNALR_CODES } from "../utils/constants";

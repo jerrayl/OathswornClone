@@ -79,7 +79,8 @@ namespace Oathsworn
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
             app.UseAuthentication();

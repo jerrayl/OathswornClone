@@ -13,7 +13,13 @@ namespace Oathsworn.Infrastructure
 
         public async Task InvokeAsync(HttpContext context)
         {
-            var claims = context.User.Claims;
+            var claims = context.User.Claims; 
+            
+            if (!claims.Any()){
+                await _next(context);
+                return;
+            }
+
             var email = claims.Where(x => x.Type.Equals(JwtRegisteredClaimNames.Email)).Single().Value;
             var givenName = claims.Where(x => x.Type.Equals(JwtRegisteredClaimNames.GivenName)).Single().Value;
             var familyName = claims.Where(x => x.Type.Equals(JwtRegisteredClaimNames.FamilyName)).Single().Value;
