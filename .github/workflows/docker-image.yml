@@ -20,10 +20,10 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     - run: |
-        docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/oathswornclone:$(date +%s)
-        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/oathswornclone:$(date +%s)
+        docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/oathswornclone:$(date +'%Y-%m-%d')
+        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/oathswornclone:$(date +'%Y-%m-%d')
     - uses: azure/webapps-deploy@v2
       with:
         app-name: 'oathswornclone'
         publish-profile: ${{ secrets.azureWebAppPublishProfile }}
-        images: '${{ secrets.REGISTRY_LOGIN_SERVER }}/oathswornclone:$(date +%s)'
+        images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/oathswornclone:$(date +'%Y-%m-%d')
