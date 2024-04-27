@@ -1,6 +1,6 @@
 import { Observer } from "mobx-react";
 import oathswornlogo from "../assets/oathswornlogo.png";
-import { MainMenuStore, StartEncounterForm } from "./MainMenuStore";
+import { MainMenuStore } from "./MainMenuStore";
 import { Players } from "./Players";
 import { FreeCompanies } from "./FreeCompanies";
 import { NewPlayerModal } from "./NewPlayerModal";
