@@ -16,14 +16,14 @@ jobs:
     - uses: actions/checkout@v4
     - uses: azure/docker-login@v1
       with:
-        login-server: oathsworn.azurecr.io
+        login-server: ${{ secrets.REGISTRY_USERNAME }}
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     - run: |
-        docker build . -t oathsworn.azurecr.io/oathswornclone:$(date +%s)
-        docker push oathsworn.azurecr.io/oathswornclone:$(date +%s)
+        docker build . -t ${{ secrets.REGISTRY_USERNAME }}/oathswornclone:$(date +%s)
+        docker push ${{ secrets.REGISTRY_USERNAME }}/oathswornclone:$(date +%s)
     - uses: azure/webapps-deploy@v2
       with:
         app-name: 'oathswornclone'
         publish-profile: ${{ secrets.azureWebAppPublishProfile }}
-        images: 'oathsworn.azurecr.io/oathswornclone:$(date +%s)'
+        images: '${{ secrets.REGISTRY_USERNAME }}/oathswornclone:$(date +%s)'
