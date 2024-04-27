@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.Net.Http.Headers;
 
 namespace Oathsworn.Infrastructure
 {
@@ -21,7 +22,7 @@ namespace Oathsworn.Infrastructure
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            if (!Context.Request.Cookies.TryGetValue("Authorization", out var authToken))
+            if (!Context.Request.Cookies.TryGetValue(HeaderNames.Authorization, out var authToken))
             {
                 return AuthenticateResult.Fail("Authorization token not found.");
             }

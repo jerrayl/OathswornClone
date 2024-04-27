@@ -16,12 +16,14 @@ namespace Oathsworn
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Environment { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -50,7 +52,7 @@ namespace Oathsworn
 
             services.AddCors();
 
-            services.AddSignalR();
+            services.AddSignalR(options => { options.EnableDetailedErrors = Environment.IsDevelopment(); });
 
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Startup>());
 
@@ -58,15 +60,15 @@ namespace Oathsworn
                 .AddScheme<JwtBearerOptions, GoogleJwtBearerHandler>(JwtBearerDefaults.AuthenticationScheme, options => { });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
+            if (Environment.IsDevelopment())
             {
                 app.UseOpenApi();
                 app.UseSwaggerUi();
             }
 
-            if (env.IsDevelopment())
+            if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -79,7 +81,7 @@ namespace Oathsworn
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            
+
             app.UseDefaultFiles();
             app.UseStaticFiles();
 

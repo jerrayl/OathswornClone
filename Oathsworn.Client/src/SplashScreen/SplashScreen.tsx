@@ -2,9 +2,16 @@ import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import oathswornlogo from "../assets/oathswornlogo.png";
 import Cookies from 'js-cookie';
 import { useNavigate } from "react-router-dom";
+import { AUTHORIZATION, ENCOUNTER_ID } from "../Game/utils/constants";
 
 export const SplashScreen = () => {
   const navigate = useNavigate();
+
+  if (Cookies.get(ENCOUNTER_ID)){
+    navigate('/game');
+  } else if (Cookies.get(AUTHORIZATION)){
+    navigate('/main-menu');
+  }
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
@@ -17,7 +24,7 @@ export const SplashScreen = () => {
             <GoogleLogin
               onSuccess={credentialResponse => {
                 if (credentialResponse.credential) {
-                  Cookies.set('Authorization', credentialResponse.credential, { secure: true });
+                  Cookies.set(AUTHORIZATION, credentialResponse.credential, { secure: true });
                   navigate('/main-menu');
                 }
               }}

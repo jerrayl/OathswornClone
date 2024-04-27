@@ -3,6 +3,7 @@ import { GameStateModel } from "../../utils/apiModels";
 import { BoardStore } from "./BoardStore";
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { ENCOUNTER_ID, SIGNALR_CODES } from "../utils/constants";
+import Cookies from 'js-cookie';
 
 export class GameStore {
   connection: HubConnection;
@@ -29,10 +30,9 @@ export class GameStore {
   }
 
   register = async () => {
-    // temporary hardcode
-    const encounterId = ENCOUNTER_ID;
+    const encounterId = Cookies.get(ENCOUNTER_ID);
     try {
-      const response = await this.connection.invoke("register", encounterId);
+      const response = await this.connection.invoke("register", Number(encounterId));
       if (response === SIGNALR_CODES.SUCCESS) {
         console.log("successfully connected to SignalR");
       }

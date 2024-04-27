@@ -1,14 +1,27 @@
 import axios from 'axios';
-import { AttackModel, CreateFreeCompanyModel, CreatePlayerModel, EncounterModel, FreeCompanyModel, JoinFreeCompanyModel, MoveModel, PlayerSummaryModel, RerollModel } from './apiModels';
-import { ENCOUNTER_ID } from '../Game/utils/constants';
+import { AttackModel, CreateFreeCompanyModel, CreatePlayerModel, EncounterModel, FreeCompanyModel, JoinFreeCompanyModel, MoveModel, PlayerSummaryModel, RerollModel, StartEncounterModel } from './apiModels';
+import { AUTHORIZATION, ENCOUNTER_ID } from '../Game/utils/constants';
+import Cookies from 'js-cookie';
 
 axios.defaults.withCredentials = true;
+
 const api = axios.create({
     baseURL: 'api/',
     headers: {
         'Content-Type': 'application/json',
     },
 });
+
+api.interceptors.response.use(response => {
+    return response;
+ }, error => {
+   if (error.response.status === 401) {
+    console.log("GOT HERE");
+    Cookies.remove(AUTHORIZATION);
+    window.location.href = '/';
+   }
+   return error;
+ });
 
 export const getPlayers = async () => {
     return (await api.get<PlayerSummaryModel[]>(`players`)).data;
@@ -32,6 +45,10 @@ export const createFreeCompany = async (model: CreateFreeCompanyModel) => {
 
 export const joinFreeCompany = async (model: JoinFreeCompanyModel) => {
     return (await api.post(`join-free-company`, model)).data;
+}
+
+export const startEncounter = async (model: StartEncounterModel) => {
+    return (await api.post(`start-encounter`, model)).data;
 }
 
 export const startAttack = async (model: AttackModel) => {

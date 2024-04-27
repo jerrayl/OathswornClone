@@ -86,7 +86,7 @@ namespace Oathsworn.Business
         public List<FreeCompanyModel> GetFreeCompanies()
         {
             var freeCompanies = _players.Read(x => x.UserId == _userContext.Id, x => x.FreeCompany, x => x.User)
-                .Where(x => x is not null)
+                .Where(x => x.FreeCompanyId is not null)
                 .GroupBy(x => x.FreeCompanyId);
 
             return freeCompanies.Select(x => {

@@ -1,7 +1,7 @@
 import { Might, Position } from "../../utils/apiModels"
 
-// Temporary hardcode
-export const ENCOUNTER_ID = 1;
+export const AUTHORIZATION = "Authorization";
+export const ENCOUNTER_ID = "ENCOUNTERID";
 
 export const SIGNALR_CODES = {
     SUCCESS: "SUCCESS"

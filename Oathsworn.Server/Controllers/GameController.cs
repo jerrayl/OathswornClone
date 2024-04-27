@@ -2,12 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Oathsworn.Business;
 using Oathsworn.Models;
-using System;
 using System.Threading.Tasks;
 using Oathsworn.Infrastructure;
 
 namespace Oathsworn.Controllers
 {
+    [EncounterIdRequired]
     public class GameController : BaseController
     {
         private IGame _game;
@@ -22,11 +22,11 @@ namespace Oathsworn.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ApiExplorerSettings(GroupName = "Game")]
-        public async Task<IActionResult> Move([FromQuery] int encounterId, [FromBody] MoveModel model)
+        public async Task<IActionResult> Move([FromBody] MoveModel model)
         {
             try
             {
-                await _game.Move(encounterId, model);
+                await _game.Move(model);
                 return Ok();
             }
             catch (ErrorMessageException e)
@@ -41,11 +41,11 @@ namespace Oathsworn.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ApiExplorerSettings(GroupName = "Game")]
-        public async Task<IActionResult> SpendToken([FromQuery] int encounterId, [FromBody] SpendTokenModel model)
+        public async Task<IActionResult> SpendToken([FromBody] SpendTokenModel model)
         {
             try
             {
-                await _game.SpendToken(encounterId, model);
+                await _game.SpendToken(model);
                 return Ok();
             }
             catch (ErrorMessageException e)
@@ -60,11 +60,11 @@ namespace Oathsworn.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ApiExplorerSettings(GroupName = "Game")]
-        public IActionResult StartAttack([FromQuery] int encounterId, [FromBody] AttackModel model)
+        public IActionResult StartAttack([FromBody] AttackModel model)
         {
             try
             {
-                return Ok(_game.StartAttack(encounterId, model));
+                return Ok(_game.StartAttack(model));
             }
             catch (ErrorMessageException e)
             {
@@ -78,11 +78,11 @@ namespace Oathsworn.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ApiExplorerSettings(GroupName = "Game")]
-        public IActionResult RerollAttack([FromQuery] int encounterId, [FromBody] RerollModel model)
+        public IActionResult RerollAttack([FromBody] RerollModel model)
         {
             try
             {
-                return Ok(_game.RerollAttack(encounterId, model));
+                return Ok(_game.RerollAttack(model));
             }
             catch (ErrorMessageException e)
             {
@@ -96,11 +96,11 @@ namespace Oathsworn.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ApiExplorerSettings(GroupName = "Game")]
-        public async Task<IActionResult> CompleteAttack([FromQuery] int encounterId, [FromQuery] int attackId)
+        public async Task<IActionResult> CompleteAttack([FromQuery] int attackId)
         {
             try
             {
-                await _game.CompleteAttack(encounterId, attackId);
+                await _game.CompleteAttack(attackId);
                 return Ok();
             }
             catch (ErrorMessageException e)
@@ -115,11 +115,11 @@ namespace Oathsworn.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ApiExplorerSettings(GroupName = "Game")]
-        public async Task<IActionResult> EndTurn([FromQuery] int encounterId)
+        public async Task<IActionResult> EndTurn()
         {
             try
             {
-                await _game.EndTurn(encounterId);
+                await _game.EndTurn();
                 return Ok();
             }
             catch (ErrorMessageException e)
@@ -134,11 +134,11 @@ namespace Oathsworn.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ApiExplorerSettings(GroupName = "Game")]
-        public async Task<IActionResult> ContinueEnemyAction([FromQuery] int encounterId)
+        public async Task<IActionResult> ContinueEnemyAction()
         {
             try
             {
-                await _game.ContinueEnemyAction(encounterId);
+                await _game.ContinueEnemyAction();
                 return Ok();
             }
             catch (ErrorMessageException e)

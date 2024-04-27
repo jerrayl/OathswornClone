@@ -9,9 +9,11 @@ namespace Oathsworn.Controllers
     public class UserManagementController : BaseController
     {
         private IUserManagement _userManagement;
-        public UserManagementController(IUserManagement userManagement)
+        private IGame _game;
+        public UserManagementController(IUserManagement userManagement, IGame game)
         {
             _userManagement = userManagement;
+            _game = game;
         }
 
         [HttpPost]
@@ -100,6 +102,24 @@ namespace Oathsworn.Controllers
         public IActionResult GetEncounters()
         {
            return Ok(_userManagement.GetEncounters());
+        }
+
+        [HttpPost]
+        [Route("start-encounter")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ApiExplorerSettings(GroupName = "Game")]
+        public IActionResult StartEncounter([FromBody] StartEncounterModel model)
+        {
+            try
+            {
+                return Ok(_game.StartEncounter(model));
+            }
+            catch (ErrorMessageException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

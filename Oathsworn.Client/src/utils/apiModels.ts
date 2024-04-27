@@ -64,6 +64,41 @@ export interface RerollModel {
     rerollTokensUsed: number;
 }
 
+export interface StartEncounterModel {
+    encounterNumber: number;
+    freeCompanyCode: string;
+}
+
+export interface CreatePlayerModel {
+    name: string;
+    class: Class;
+}
+
+export enum Class {
+    Warbear = <any>"Warbear",
+    Exile = <any>"Exile",
+    Cur = <any>"Cur",
+    Priest = <any>"Priest",
+    Harbinger = <any>"Harbinger",
+    Blade = <any>"Blade",
+    Witch = <any>"Witch",
+    Ranger = <any>"Ranger",
+    Warden = <any>"Warden",
+    Huntress = <any>"Huntress",
+    Penitent = <any>"Penitent",
+    GroveMaiden = <any>"GroveMaiden",
+}
+
+export interface CreateFreeCompanyModel {
+    playerId: number;
+    name: string;
+}
+
+export interface JoinFreeCompanyModel {
+    playerId: number;
+    code: string;
+}
+
 export interface GameStateModel {
     players: PlayerModel[];
     boss: BossModel;
@@ -84,21 +119,6 @@ export interface PlayerModel {
     currentHealth: number;
     currentAnimus: number;
     tokens: { [key: string]: number; };
-}
-
-export enum Class {
-    Warbear = <any>"Warbear",
-    Exile = <any>"Exile",
-    Cur = <any>"Cur",
-    Priest = <any>"Priest",
-    Harbinger = <any>"Harbinger",
-    Blade = <any>"Blade",
-    Witch = <any>"Witch",
-    Ranger = <any>"Ranger",
-    Warden = <any>"Warden",
-    Huntress = <any>"Huntress",
-    Penitent = <any>"Penitent",
-    GroveMaiden = <any>"GroveMaiden",
 }
 
 export interface BossModel {
@@ -174,22 +194,7 @@ export interface FreeCompanyModel {
     players: PlayerSummaryModel[];
 }
 
-export interface CreatePlayerModel {
-    name: string;
-    class: Class;
-}
-
 export interface PlayerSummaryModel extends CreatePlayerModel {
     id: number;
     userEmail: string;
-}
-
-export interface CreateFreeCompanyModel {
-    playerId: number;
-    name: string;
-}
-
-export interface JoinFreeCompanyModel {
-    playerId: number;
-    code: string;
 }

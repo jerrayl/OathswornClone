@@ -108,5 +108,8 @@ namespace Oathsworn
 
         // SignalR Responses
         public const string SUCCESS = "SUCCESS";
+
+        // Cookie values
+        public const string ENCOUNTER_ID = "ENCOUNTERID";
     }
 }

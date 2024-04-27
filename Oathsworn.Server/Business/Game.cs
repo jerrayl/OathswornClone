@@ -17,14 +17,14 @@ namespace Oathsworn.Business
 {
     public interface IGame
     {
-        int StartEncounter(string freeCompanyCode, int encounterNumber);
-        AttackResponseModel StartAttack(int encounterId, AttackModel attackModel);
-        AttackResponseModel RerollAttack(int encounterId, RerollModel rerollModel);
-        Task CompleteAttack(int encounterId, int attackId);
-        Task Move(int encounterId, MoveModel moveModel);
-        Task SpendToken(int encounterId, SpendTokenModel spendTokenModel);
-        Task EndTurn(int encounterId);
-        Task ContinueEnemyAction(int encounterId);
+        int StartEncounter(StartEncounterModel model);
+        AttackResponseModel StartAttack(AttackModel attackModel);
+        AttackResponseModel RerollAttack(RerollModel rerollModel);
+        Task CompleteAttack(int attackId);
+        Task Move(MoveModel moveModel);
+        Task SpendToken(SpendTokenModel spendTokenModel);
+        Task EndTurn();
+        Task ContinueEnemyAction();
     }
 
     public class Game : IGame
@@ -41,6 +41,8 @@ namespace Oathsworn.Business
         private readonly IMightCardsService _mightCardsService;
         private readonly INotificationService _notificationService;
         private readonly IBossFactory _bossFactory;
+        private readonly UserContext _userContext;
+
 
         public Game(
             IDatabaseRepository<Encounter> encounters,
@@ -54,7 +56,8 @@ namespace Oathsworn.Business
             IMapper mapper,
             IMightCardsService mightCardsService,
             INotificationService notificationService,
-            IBossFactory bossFactory
+            IBossFactory bossFactory,
+            UserContext userContext
         )
         {
             _encounters = encounters;
@@ -69,11 +72,12 @@ namespace Oathsworn.Business
             _mightCardsService = mightCardsService;
             _notificationService = notificationService;
             _bossFactory = bossFactory;
+            _userContext = userContext;
         }
 
-        public int StartEncounter(string freeCompanyCode, int encounterNumber)
+        public int StartEncounter(StartEncounterModel model)
         {
-            var freeCompany = _freeCompanies.ReadOne(x => x.Code == freeCompanyCode, x => x.Players);
+            var freeCompany = _freeCompanies.ReadOne(x => x.Code == model.FreeCompanyCode, x => x.Players);
 
             if (freeCompany.Players.Count != 4)
             {
@@ -129,14 +133,14 @@ namespace Oathsworn.Business
             enemyMightCards.Shuffle();
             _mightCards.AddBatch(enemyMightCards);
 
-            _bossFactory.CreateBossByNumber(encounterNumber, encounter.Id);
+            _bossFactory.CreateBossByNumber(model.EncounterNumber, encounter.Id);
 
             return encounter.Id;
         }
 
-        public async Task Move(int encounterId, MoveModel moveModel)
+        public async Task Move(MoveModel moveModel)
         {
-            var player = _encounterPlayers.ReadOne(x => x.EncounterId == encounterId && x.Id == moveModel.PlayerId);
+            var player = _encounterPlayers.ReadOne(x => x.EncounterId == _userContext.EncounterId && x.Id == moveModel.PlayerId);
 
             if (player is null)
             {
@@ -152,12 +156,12 @@ namespace Oathsworn.Business
                 _encounterPlayers.Update(player);
             }
 
-            await _notificationService.UpdateGameState(encounterId);
+            await _notificationService.UpdateGameState(_userContext.EncounterId.Value);
         }
 
-        public async Task SpendToken(int encounterId, SpendTokenModel spendTokenModel)
+        public async Task SpendToken(SpendTokenModel spendTokenModel)
         {
-            var player = _encounterPlayers.ReadOne(x => x.EncounterId == encounterId && x.PlayerId == spendTokenModel.PlayerId);
+            var player = _encounterPlayers.ReadOne(x => x.EncounterId == _userContext.EncounterId && x.PlayerId == spendTokenModel.PlayerId);
 
             if (player is null)
             {
@@ -176,10 +180,10 @@ namespace Oathsworn.Business
                 //Perform logic
             }
 
-            await _notificationService.UpdateGameState(encounterId);
+            await _notificationService.UpdateGameState(_userContext.EncounterId.Value);
         }
 
-        public async Task CompleteAttack(int encounterId, int attackId)
+        public async Task CompleteAttack(int attackId)
         {
             var attack = _attacks.ReadOne(x => x.Id == attackId, x => x.MightCards, x => x.Player, x => x.Player.EncounterPlayer, x => x.Boss);
 
@@ -190,7 +194,7 @@ namespace Oathsworn.Business
 
             if (attack.MightCards.Count(x => !x.IsDrawnFromCritical && x.Value == 0) > GlobalConstants.NUM_ZEROES_TO_MISS)
             {
-                await _notificationService.UpdateGameState(encounterId);
+                await _notificationService.UpdateGameState(_userContext.EncounterId.Value);
             }
 
             attack.Player.EncounterPlayer.Tokens[Token.Empower] -= attack.EmpowerTokensUsed;
@@ -210,10 +214,10 @@ namespace Oathsworn.Business
 
             _attacks.Delete(attack);
 
-            await _notificationService.UpdateGameState(encounterId);
+            await _notificationService.UpdateGameState(_userContext.EncounterId.Value);
         }
 
-        public AttackResponseModel RerollAttack(int encounterId, RerollModel rerollModel)
+        public AttackResponseModel RerollAttack(RerollModel rerollModel)
         {
             var attack = _attacks.ReadOne(x => x.Id == rerollModel.AttackId, x => x.MightCards, x => x.Player, x => x.Player.EncounterPlayer);
 
@@ -274,7 +278,7 @@ namespace Oathsworn.Business
             };
         }
 
-        public AttackResponseModel StartAttack(int encounterId, AttackModel attackModel)
+        public AttackResponseModel StartAttack(AttackModel attackModel)
         {
             var player = _players.ReadOne(x => x.Id == attackModel.PlayerId, x => x.Attacks);
 
@@ -298,7 +302,7 @@ namespace Oathsworn.Business
             }
 
             // Assume that boss is the target
-            var bossEntity = _bosses.ReadOne(x => x.EncounterId == encounterId);
+            var bossEntity = _bosses.ReadOne(x => x.EncounterId == _userContext.EncounterId);
             var boss = _bossFactory.GetBossInstance(bossEntity);
             if (!boss.GetBossPositions().Any(x => x.EqualTo(attackModel.Target)))
             {
@@ -319,7 +323,7 @@ namespace Oathsworn.Business
             _attacks.Add(attack);
 
             var playerMightDeck = _encounterMightDecks
-                .ReadOne(x => x.EncounterId == encounterId && x.IsFreeCompanyDeck);
+                .ReadOne(x => x.EncounterId == _userContext.EncounterId && x.IsFreeCompanyDeck);
 
             var cardsDrawn = new List<MightCard>();
             var cardsDrawnFromCrit = new List<MightCard>();
@@ -347,11 +351,11 @@ namespace Oathsworn.Business
             };
         }
 
-        public async Task EndTurn(int encounterId)
+        public async Task EndTurn()
         {
             // check if all players have accepted end turn
 
-            var encounter = _encounters.ReadOne(x => x.Id == encounterId, x => x.Boss);
+            var encounter = _encounters.ReadOne(x => x.Id == _userContext.EncounterId, x => x.Boss);
 
             if (encounter is null || encounter.CharacterPerformingAction is not null)
             {
@@ -360,13 +364,13 @@ namespace Oathsworn.Business
 
             _bossFactory.GetBossInstance(encounter.Boss).BeginAction();
 
-            await _notificationService.UpdateGameState(encounterId);
+            await _notificationService.UpdateGameState(_userContext.EncounterId.Value);
         }
 
-        public async Task ContinueEnemyAction(int encounterId)
+        public async Task ContinueEnemyAction()
         {
             //ignore minions for now
-            var encounter = _encounters.ReadOne(x => x.Id == encounterId, x => x.Boss);
+            var encounter = _encounters.ReadOne(x => x.Id == _userContext.EncounterId, x => x.Boss);
 
             if (encounter is null || encounter.CharacterPerformingAction != CharacterType.Boss)
             {
@@ -375,7 +379,7 @@ namespace Oathsworn.Business
 
             _bossFactory.GetBossInstance(encounter.Boss).PerformAction();
 
-            await _notificationService.UpdateGameState(encounterId);
+            await _notificationService.UpdateGameState(_userContext.EncounterId.Value);
         }
     }
 }

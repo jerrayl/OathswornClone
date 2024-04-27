@@ -10,11 +10,12 @@ namespace Oathsworn.Infrastructure
         public string Email { get; set; }
         public string GivenName { get; set; }
         public string FamilyName { get; set; }
+        public int? EncounterId { get; set; }
     }
 
     public interface IUserContextFactory
     {
-        public Task SetContext(string email, string givenName, string familyName);
+        public Task SetContext(string email, string givenName, string familyName, int? encounterId);
         public UserContext UserContext { get; }
     }
 
@@ -25,7 +26,7 @@ namespace Oathsworn.Infrastructure
 
         public UserContext UserContext => _userContext;
 
-        public async Task SetContext(string email, string givenName, string familyName)
+        public async Task SetContext(string email, string givenName, string familyName, int? encounterId)
         {
             // Todo: cache fetching of user
             var user = _users.ReadOne(x => x.Email.Equals(email));
@@ -40,7 +41,8 @@ namespace Oathsworn.Infrastructure
                 Id = user.Id,
                 Email = email,
                 GivenName = givenName,
-                FamilyName = familyName
+                FamilyName = familyName,
+                EncounterId =  encounterId
             };
         }
     }
