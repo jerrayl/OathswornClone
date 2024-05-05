@@ -93,6 +93,7 @@ namespace Oathsworn
             {
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapHub<SignalRHub>("signalr");
+                endpoints.MapFallbackToFile("/index.html");
             });
 
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
