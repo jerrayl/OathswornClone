@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import { Button } from "../../Game/components/shared/Button";
+import { Button } from "./Button";
 import { PropsWithChildren } from "react";
 
 export interface ModalProps {
@@ -11,8 +11,8 @@ export interface ModalProps {
 
 export const Modal = observer(({ title, buttonText, closeModal, submitForm, children }: PropsWithChildren<ModalProps>) => {
     return (
-        <div className="font-serif fixed z-10 inset-0 flex items-center justify-center min-h-full bg-stone-800 bg-opacity-40">
-            <div className="rounded-lg overflow-hidden shadow-xl max-w-lg min-w-[25%] bg-stone-400 px-6 py-6 text-center">
+        <div className="font-serif fixed z-10 inset-0 flex items-center justify-center min-h-full bg-bg2 bg-opacity-60">
+            <div className="rounded-lg overflow-hidden shadow-xl max-w-lg min-w-[25%] bg-bg2 text-text2 px-6 py-6 text-center">
                 <div className="flex justify-between mb-4">
                     <h3 className="text-xl font-medium">
                         {title}
@@ -26,7 +26,7 @@ export const Modal = observer(({ title, buttonText, closeModal, submitForm, chil
                 {children}
                 <div>
                     <div className="flex justify-center mt-4">
-                        <Button text={buttonText} onClick={submitForm} />
+                        <Button text={buttonText} onClick={submitForm} isPrimary/>
                     </div>
                 </div>
             </div>

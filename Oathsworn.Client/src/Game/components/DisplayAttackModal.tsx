@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
 import { CharacterType, DisplayAttackModel } from "../../utils/apiModels";
-import { Button } from "./shared/Button";
 import { MightCardDisplay } from "./shared/MightCardDisplay";
+import { Button } from "../../SharedComponents/Button";
 
 export interface DisplayAttackModalProps {
     displayAttackModel: DisplayAttackModel;
@@ -10,9 +10,9 @@ export interface DisplayAttackModalProps {
 
 export const DisplayAttackModal = observer(({ displayAttackModel, continueAction }: DisplayAttackModalProps) => {
     return (
-        <div className="font-serif fixed z-10 inset-0 flex items-center justify-center min-h-full caret-transparent bg-stone-800 bg-opacity-40">
-            <div className="rounded-lg overflow-hidden shadow-xl max-w-lg min-w-[25%]">
-                <div className="bg-stone-400 px-6 py-6">
+        <div className="font-serif fixed z-10 inset-0 flex items-center justify-center min-h-full caret-transparent bg-bg2 bg-opacity-60">
+            <div className="rounded-lg overflow-hidden shadow-xl max-w-lg min-w-[25%] bg-bg2 text-text2">
+                <div className="px-6 py-6">
                     <div className="text-center">
                         <div className="flex justify-between">
                             <h3 className="text-xl font-medium">
@@ -43,7 +43,7 @@ export const DisplayAttackModal = observer(({ displayAttackModel, continueAction
                         </div>
                         <div>
                             <div className="flex justify-center">
-                                <Button text="Continue" onClick={async () => await continueAction()} />
+                                <Button text="Continue" onClick={async () => await continueAction()} isPrimary/>
                             </div>
                         </div>
                     </div>

@@ -1,9 +1,9 @@
-import { CharacterType, Might } from "../../utils/apiModels";
+import { CharacterType, Class, Might } from "../../utils/apiModels";
 
 export type TileOccupant = {
     id: number;
     type: CharacterType;
-    content: string;
+    content: string | Class;
     description: string;
 }
 

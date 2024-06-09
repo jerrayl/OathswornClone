@@ -37,11 +37,11 @@ export interface SpendTokenModel {
 }
 
 export enum Token {
-    Battleflow = 0,
-    Redraw = 1,
-    Defence = 2,
-    Empower = 3,
-    Animus = 4,
+    Battleflow = <any>"Battleflow",
+    Redraw = <any>"Redraw",
+    Defence = <any>"Defence",
+    Empower = <any>"Empower",
+    Animus = <any>"Animus",
 }
 
 export interface AttackModel {

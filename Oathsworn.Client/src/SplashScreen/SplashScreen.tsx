@@ -7,33 +7,31 @@ import { AUTHORIZATION, ENCOUNTER_ID } from "../Game/utils/constants";
 export const SplashScreen = () => {
   const navigate = useNavigate();
 
-  if (Cookies.get(ENCOUNTER_ID)){
+  if (Cookies.get(ENCOUNTER_ID)) {
     navigate('/game');
-  } else if (Cookies.get(AUTHORIZATION)){
+  } else if (Cookies.get(AUTHORIZATION)) {
     navigate('/main-menu');
   }
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <div>
-        <div className="flex flex-col caret-transparent">
-          <div className="flex justify-center">
-            <img src={oathswornlogo} alt="oathsworn logo" />
-          </div>
-          <div className="flex justify-center">
-            <GoogleLogin
-              onSuccess={credentialResponse => {
-                if (credentialResponse.credential) {
-                  Cookies.set(AUTHORIZATION, credentialResponse.credential, { secure: true });
-                  navigate('/main-menu');
-                }
-              }}
-              onError={() => {
-                console.log('Login Failed');
-              }}
-              useOneTap
-            />
-          </div>
+      <div className="flex flex-col caret-transparent h-screen bg-bg1">
+        <div className="flex justify-center">
+          <img src={oathswornlogo} alt="oathsworn logo" />
+        </div>
+        <div className="flex justify-center">
+          <GoogleLogin
+            onSuccess={credentialResponse => {
+              if (credentialResponse.credential) {
+                Cookies.set(AUTHORIZATION, credentialResponse.credential, { secure: true });
+                navigate('/main-menu');
+              }
+            }}
+            onError={() => {
+              console.log('Login Failed');
+            }}
+            useOneTap
+          />
         </div>
       </div>
     </GoogleOAuthProvider>

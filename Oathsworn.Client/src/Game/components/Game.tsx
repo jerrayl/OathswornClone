@@ -7,7 +7,7 @@ export const Game = () => {
 
     return (
         <Observer>
-            {() => gameStore.gameState ? <Board boardStore={gameStore.boardStore} /> : <div className="w-full h-screen flex items-center justify-center"><h2>Loading...</h2></div>}
+            {() => gameStore.gameState ? <Board boardStore={gameStore.boardStore} /> : <div className="w-screen h-screen flex items-center justify-center bg-bg1"><h2>Loading...</h2></div>}
         </Observer>
     )
 }

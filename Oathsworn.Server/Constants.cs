@@ -21,6 +21,7 @@ namespace Oathsworn
         RightFlank,
     }
 
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Token
     {
         Battleflow,
@@ -67,7 +68,7 @@ namespace Oathsworn
         South,
         SouthWest
     }
-    
+
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Corner
     {

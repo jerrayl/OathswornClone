@@ -4,7 +4,6 @@ import { CharacterType, GameStateModel, Position } from "../../utils/apiModels";
 import { continueEnemyAction, endTurn, move } from "../../utils/api";
 import { AttackStore } from "./AttackStore";
 import { TileOccupant } from "../utils/types";
-import { classIconMap } from "../../assets/icons/ClassIcons";
 import { borderIconMap } from "../../assets/icons/BorderIcons";
 import { bossIconMap } from "../../assets/icons/BossIcons";
 
@@ -47,8 +46,13 @@ export class BoardStore {
     }
 
     const occupant = this.getTileOccupant(position);
+    console.log(this.selectedPath);
 
-    if (this.selectedPath.length > 0 && occupant?.type == CharacterType.Boss) {
+    if (occupant?.type == CharacterType.Boss &&
+      (this.selectedPlayer && IsAdjacent(this.selectedPlayer, position) ||
+        this.selectedPath.length > 0 && IsAdjacent(this.selectedPath[this.selectedPath.length-1], position)
+      )
+    ) {
       const boss = this.getGameState().boss;
       const validBossPositions = boss.positions.filter(x => boss.health[x.bossPart] > 0);
       const nearestBossPositions = GetAllNearest(this.selectedPlayer!, validBossPositions);
@@ -120,7 +124,7 @@ export class BoardStore {
   }
 
   getTileColor = (position: Position): string => {
-    return Equal(this.selectedPosition, position) ? "bg-gray-300" : this.tileIsHighlighted(position) ? "bg-stone-300" : "bg-stone-200";
+    return Equal(this.selectedPosition, position) ? "bg-bg5" : this.tileIsHighlighted(position) ? "bg-bg4" : "bg-bg3";
   }
 
   getTileOccupant = (position: Position): TileOccupant | undefined => {
@@ -128,7 +132,7 @@ export class BoardStore {
     const player = gameState.players.filter(player => Equal(player, position)).find(x => x);
     const bossPosition = gameState.boss.positions.filter(bossPosition => Equal(bossPosition, position)).find(x => x);
     const bossBorder = bossPosition?.corner ?? bossPosition?.direction ?? "";
-    return player ? { id: player.id, description: player.class.toString(), content: classIconMap[player.class], type: CharacterType.Player } :
+    return player ? { id: player.id, description: player.class.toString(), content: player.class, type: CharacterType.Player } :
       bossPosition ? { id: gameState.boss.id, description: "Boss " + bossBorder.toString(), content: bossBorder ? borderIconMap[bossBorder] : bossIconMap[gameState.boss.number], type: CharacterType.Boss } :
         undefined;
   }

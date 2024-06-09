@@ -23,7 +23,6 @@ export class EncounterBuilderStore {
 
 
   getTileColor = (position: Position): string => {
-    return ContainsPosition(this.selectedPositions, position) ? "bg-stone-500"  : "bg-stone-200";
+    return ContainsPosition(this.selectedPositions, position) ? "bg-bg5"  : "bg-bg3";
   }
-
 }
