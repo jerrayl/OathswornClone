@@ -1,5 +1,6 @@
 # OathswornClone
 Web-based implementation of the game Oathsworn
+Hosted at [https://oathswornclone.azurewebsites.net]([url](https://oathswornclone.azurewebsites.net/))
 
 This project is a work-in-progress, further documentation of technical implementation details and features to be added in the future.
 
